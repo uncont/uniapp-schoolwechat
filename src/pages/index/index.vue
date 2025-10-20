@@ -30,6 +30,7 @@
     </view>
     <view class="index">
       <view class="top">
+        <!-- 分段器 -->
         <view class="segmented">
           <wd-segmented
             :options="list"
@@ -37,6 +38,7 @@
             custom-class="index-segmented"
           ></wd-segmented>
         </view>
+        <!-- 轮播图 -->
         <view class="card-swiper">
           <wd-swiper
             autoplay
@@ -51,6 +53,7 @@
             nextMargin="42px"
           ></wd-swiper>
         </view>
+        <!-- 分区功能栏 -->
         <view class="function-buttons">
           <wd-grid clickable>
             <wd-grid-item icon="picture" text="文字" />
@@ -59,6 +62,7 @@
           </wd-grid>
         </view>
       </view>
+      <!-- 推荐内容 -->
       <view class="content">
         <view class="title"> </view>
         <view class="posts">
@@ -86,42 +90,29 @@ import PostsCard from './components/PostsCard.vue'
 
 import { testApi } from '../../api/test'
 
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 
-// 胶囊按钮相关数据
+// 系统信息相关数据
 const menuButtonBounding = ref(null)
 const statusBarHeight = ref(0)
 
-// 计算菜单按钮高度
-const menuButtonHeight = computed(() => {
-  return menuButtonBounding.value ? menuButtonBounding.value.height : 32
-})
-
-// 计算菜单按钮与状态栏之间的间距
-const menuButtonMarginTop = computed(() => {
-  if (!menuButtonBounding.value) return 0
-  return menuButtonBounding.value.top - statusBarHeight.value
-})
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
+
 onMounted(() => {
   testApi()
 
-  // 获取胶囊按钮位置信息
-  // #ifdef MP-WEIXIN
-  const rect = uni.getMenuButtonBoundingClientRect()
-  menuButtonBounding.value = rect
+  // 获取系统信息
   statusBarHeight.value = uni.getSystemInfoSync().statusBarHeight
-  // #endif
 
-  // #ifndef MP-WEIXIN
-  // 非微信小程序平台使用默认值
-  statusBarHeight.value = uni.getSystemInfoSync().statusBarHeight
+  // 仅在微信小程序中获取胶囊按钮位置信息
+  // #ifdef MP-WEIXIN
+  menuButtonBounding.value = uni.getMenuButtonBoundingClientRect()
   // #endif
 })
 
 const current = ref(0)
-
 const keyword = ref('')
+const active = ref('点赞')
 
 const swiperList = ref([
   'https://wot-ui.cn/assets/redpanda.jpg',
@@ -130,51 +121,36 @@ const swiperList = ref([
   'https://wot-ui.cn/assets/moon.jpg',
   'https://wot-ui.cn/assets/meng.jpg'
 ])
+
+const list = ref(['社区', '推荐', '热门校园'])
+
 function handleClick(e) {
   console.log(e)
 }
+
 function onChange(e) {
   console.log(e)
 }
-const list = ref(['社区', '推荐', '热门校园'])
 
-const active = ref('点赞')
-
-// 封装获取胶囊按钮对齐样式的函数
+// 获取与胶囊按钮对齐的样式
 function getMenuButtonAlignedStyle() {
+  // #ifdef MP-WEIXIN
+  if (menuButtonBounding.value) {
+    return {
+      height: `${menuButtonBounding.value.height}px`,
+      marginTop: `${menuButtonBounding.value.top - statusBarHeight.value}px`
+    }
+  }
+  // #endif
+
   // 默认样式
-  const defaultStyle = {
+  return {
     height: '32px',
     marginTop: '0px'
   }
-
-  // #ifdef MP-WEIXIN
-  try {
-    if (menuButtonBounding.value) {
-      return {
-        height: menuButtonBounding.value.height + 'px',
-        marginTop: menuButtonBounding.value.top - statusBarHeight.value + 'px'
-      }
-    }
-  } catch (error) {
-    console.error('获取胶囊按钮信息失败:', error)
-  }
-  // #endif
-
-  // #ifndef MP-WEIXIN
-  try {
-    return {
-      height: '32px',
-      marginTop: statusBarHeight.value + 'px'
-    }
-  } catch (error) {
-    console.error('获取系统信息失败:', error)
-  }
-  // #endif
-
-  return defaultStyle
 }
 </script>
+
 <style scoped lang="scss">
 .nav {
   margin-bottom: 10px;
@@ -209,7 +185,6 @@ function getMenuButtonAlignedStyle() {
   :deep(.is-active) {
     transform: scale(1.3);
   }
-  // 使用 !important 确保样式生效
   :deep(.wd-segmented__item--active) {
     position: absolute;
     bottom: 0;
