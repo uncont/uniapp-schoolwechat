@@ -18,6 +18,6 @@ export default {
 .warp {
   width: 100vw;
   height: 100vh;
-  background-color: rgba($color: #000000, $alpha: 0.2);
+  background: linear-gradient(115deg, #6eb1ff 0%, #a3cdff 20%, #e49ade 100%);
 }
 </style>
