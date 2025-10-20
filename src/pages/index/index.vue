@@ -31,7 +31,11 @@
     <view class="index">
       <view class="top">
         <view class="segmented">
-          <wd-segmented :options="list" v-model:value="active"></wd-segmented>
+          <wd-segmented
+            :options="list"
+            v-model:value="active"
+            custom-class="index-segmented"
+          ></wd-segmented>
         </view>
         <view class="card-swiper">
           <wd-swiper
@@ -195,6 +199,24 @@ function getMenuButtonAlignedStyle() {
   .search-box {
     display: flex;
     align-items: center;
+  }
+}
+.segmented {
+  :deep(.index-segmented) {
+    background: transparent;
+    position: relative;
+  }
+  :deep(.is-active) {
+    transform: scale(1.3);
+  }
+  // 使用 !important 确保样式生效
+  :deep(.wd-segmented__item--active) {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: pink;
+    width: 20% !important;
+    margin-left: 6.5%;
   }
 }
 .card-swiper {
