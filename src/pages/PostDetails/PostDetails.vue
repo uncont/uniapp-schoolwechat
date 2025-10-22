@@ -1,5 +1,21 @@
 <template>
-  <CustomNavbar></CustomNavbar>
+  <view class="navbar">
+    <wd-navbar left-arrow safeAreaInsetTop>
+      <template #title>
+        <wd-row custom-class="nav-row">
+          <wd-col :span="4" custom-class="nav-col">
+            <wd-img :width="36" :height="36" :round="true" :src="joy" />
+          </wd-col>
+          <wd-col :span="12" :offset="1">
+            <view class="userName" custom-class="nav-col">
+              <wd-text text="我是用户名称" color="#333"></wd-text>
+              <wd-text text="1小时前" size="12px"></wd-text>
+            </view>
+          </wd-col>
+        </wd-row>
+      </template>
+    </wd-navbar>
+  </view>
   <view class="content">
     <view class="card">
       <wd-card type="rectangle">
@@ -69,8 +85,6 @@
 </template>
 ,
 <script setup>
-import CustomNavbar from '../../components/CustomNavbar.vue'
-
 import { ref } from 'vue'
 
 const list = ref(['评论', '点赞', '贡献', '打赏'])
@@ -81,6 +95,24 @@ const current = ref('点赞')
 <style scoped lang="scss"></style>
 
 <style scoped lang="scss">
+.navbar {
+  :deep(.nav-row) {
+    height: 100%;
+  }
+  :deep(.nav-col) {
+    padding-top: 4px;
+    height: 100%;
+  }
+  .userName {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100%;
+    line-height: 22px;
+  }
+}
+
 .bottom {
   :deep(custom-search) {
     width: 100%;
