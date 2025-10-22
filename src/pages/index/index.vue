@@ -61,7 +61,7 @@
                 <wd-img :width="48" :height="48" :src="icon1" />
               </template>
             </wd-grid-item>
-            <wd-grid-item text="课表信息" custom-class="custom-item">
+            <wd-grid-item text="课表信息" custom-class="custom-item" @itemclick="PushSchedule">
               <template #icon>
                 <wd-img :width="48" :height="48" :src="icon2" />
               </template>
@@ -126,6 +126,15 @@ import PostsCard from './components/PostsCard.vue'
 import { testApi } from '../../api/test'
 
 import { ref, onMounted } from 'vue'
+
+//  路由跳转
+function PushSchedule() {
+  console.log('hello')
+
+  uni.navigateTo({
+    url: '/pages/Schedule/ScheduleInfo'
+  })
+}
 
 // 系统信息相关数据
 const menuButtonBounding = ref(null)

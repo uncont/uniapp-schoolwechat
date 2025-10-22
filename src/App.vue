@@ -1,18 +1,23 @@
-<script>
-export default {
-  options: {
-    virtualHost: true
-  },
-  onLaunch: function () {
-    console.log('App Launch')
-  },
-  onShow: function () {
-    console.log('App Show')
-  },
-  onHide: function () {
-    console.log('App Hide')
-  }
+<script setup>
+import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
+
+// 配置选项
+const options = {
+  virtualHost: true
 }
+
+// 应用生命周期
+onLaunch(() => {
+  console.log('App Launch')
+})
+
+onShow(() => {
+  console.log('App Show')
+})
+
+onHide(() => {
+  console.log('App Hide')
+})
 </script>
 <style lang="scss">
 .warp {

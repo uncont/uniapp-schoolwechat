@@ -19,6 +19,13 @@
         "navigationBarTitleText": "PostDetails",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/Schedule/ScheduleInfo",
+      "style": {
+        "navigationBarTitleText": "ScheduleInfo",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabbar": {
