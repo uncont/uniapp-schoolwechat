@@ -10,7 +10,7 @@
           <wd-col :span="16" :offset="2">
             <view class="details">
               <wd-text text="/20℃" size="18px" />
-              <wd-text text="多云转小雨" color="#333" blod size="18px" />
+              <wd-text text="多云转小雨" color="#333" bold size="18px" />
             </view>
           </wd-col>
         </wd-row>
@@ -27,15 +27,70 @@
     </view>
     <view class="today-schedule">
       <view class="title">
-        <wd-text text="今日课程" /><wd-text text="2025年5月18日" /><wd-text text="周六"
-      /></view>
+        <view class="text">
+          <wd-text text="今日课程" color="#333" bold size="18px" /><wd-text
+            text="2025年5月18日 周六"
+            size="12px"
+          />
+        </view>
+        <wd-button custom-class="button">全部课表 ></wd-button>
+      </view>
+      <view class="schedule-info">
+        <wd-steps vertical>
+          <wd-step>
+            <template #icon>
+              <view style="display: flex; align-items: center; justify-content: center">
+                <wd-text text="8:30" color="#333" size="18px" bold></wd-text>
+              </view>
+            </template>
+            <template #title></template>
+            <template #description>
+              <view class="course-card">
+                <wd-card custom-class="card">
+                  <template #default>
+                    <wd-text text="大学生创业基础" size="18px" bold color="#e9805b"></wd-text>
+                  </template>
+                  <template #footer>
+                    <view class="other-info">
+                      <wd-text text="老师：" /><wd-text text="张萌" />
+                      <wd-text text=" | 教室" /><wd-text text="春晗楼404" />
+                    </view>
+                  </template>
+                </wd-card>
+              </view>
+            </template>
+          </wd-step>
+          <wd-step>
+            <template #icon>
+              <view style="display: flex; align-items: center; justify-content: center">
+                <wd-text text="8:30" color="#333" size="18px" bold></wd-text>
+              </view>
+            </template>
+            <template #title></template>
+            <template #description>
+              <view class="course-card">
+                <wd-card custom-class="card">
+                  <template #default>
+                    <wd-text text="大学生创业基础" size="18px" bold color="#e9805b"></wd-text>
+                  </template>
+                  <template #footer>
+                    <view class="other-info">
+                      <wd-text text="老师：" /><wd-text text="张萌" />
+                      <wd-text text=" | 教室" /><wd-text text="春晗楼404" />
+                    </view>
+                  </template>
+                </wd-card>
+              </view>
+            </template>
+          </wd-step>
+        </wd-steps>
+      </view>
     </view>
   </view>
 </template>
 <script setup>
 import { ref } from 'vue'
 import CustomNavbar from '../../components/CustomNavbar.vue'
-
 const joy = ref('/static/icon/weater.png')
 </script>
 <style lang="scss" scoped>
@@ -68,7 +123,38 @@ const joy = ref('/static/icon/weater.png')
   }
 }
 .today-schedule {
-  border-radius: 48px;
+  border-radius: 24px 24px 0 0;
   background: #fff;
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    line-height: 60px;
+    :deep(text) {
+      margin-left: 6px;
+    }
+    :deep(.button) {
+      background: transparent;
+      color: #333;
+    }
+  }
+  .schedule-info {
+    padding: 0 20px;
+    .course-card {
+      :deep(.card) {
+        padding: 10px 20px;
+        margin: 0 0 0 40px;
+        background: #e9805b20;
+      }
+    }
+    .other-info {
+      display: flex;
+      margin-top: 12px;
+      :deep(.wd-text) {
+        color: #e9805b;
+      }
+    }
+  }
 }
 </style>
