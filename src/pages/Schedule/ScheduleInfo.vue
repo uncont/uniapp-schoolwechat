@@ -33,7 +33,7 @@
             size="12px"
           />
         </view>
-        <wd-button custom-class="button">全部课表 ></wd-button>
+        <wd-button custom-class="button" @click="PushAllCourseInfo()">全部课表 ></wd-button>
       </view>
       <view class="schedule-info">
         <wd-steps vertical>
@@ -91,7 +91,12 @@
 <script setup>
 import { ref } from 'vue'
 import CustomNavbar from '../../components/CustomNavbar.vue'
+
 const joy = ref('/static/icon/weater.png')
+
+function PushAllCourseInfo() {
+  uni.navigateTo({ url: '/pages/Schedule/AllCourseInfo' })
+}
 </script>
 <style lang="scss" scoped>
 .schedule {

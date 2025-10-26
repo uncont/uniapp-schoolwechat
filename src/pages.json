@@ -26,6 +26,13 @@
         "navigationBarTitleText": "ScheduleInfo",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/Schedule/AllCourseInfo",
+      "style": {
+        "navigationBarTitleText": "AllCourseInfo",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabbar": {
