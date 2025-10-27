@@ -22,7 +22,7 @@ onHide(() => {
 <style lang="scss">
 .warp {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(115deg, #6eb1ff 0%, #a3cdff 20%, #e49ade 100%);
 }
 </style>
