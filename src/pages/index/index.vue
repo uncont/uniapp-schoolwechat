@@ -3,7 +3,6 @@
     <!-- 顶部导航栏 -->
     <view class="nav">
       <wd-navbar
-        fixed
         placeholder
         safeAreaInsetTop
         custom-class="custom-nav"
