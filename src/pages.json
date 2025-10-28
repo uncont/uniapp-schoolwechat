@@ -14,6 +14,13 @@
       }
     },
     {
+      "path": "pages/Mine/MineIndex",
+      "style": {
+        "navigationBarTitleText": "MineIndex",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/PostDetails/PostDetails",
       "style": {
         "navigationBarTitleText": "PostDetails",
@@ -35,9 +42,12 @@
       }
     }
   ],
-  "tabbar": {
+  "tabBar": {
     "custom": true,
-    "list": [{ "pagePath": "pages/index/index", "text": "首页" }]
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/Mine/MineIndex", "text": "我的" }
+    ]
   },
   "globalStyle": {
     "navigationBarTextStyle": "black",
