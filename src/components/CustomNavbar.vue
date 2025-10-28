@@ -1,10 +1,20 @@
 <template>
   <view class="navbar">
-    <wd-navbar custom-class="custom-nav" fixed :bordered="false" placeholder safeAreaInsetTop>
+    <wd-navbar
+      custom-class="custom-nav"
+      fixed
+      :bordered="false"
+      placeholder
+      safeAreaInsetTop
+      left-arrow
+      @click-left="handleClickLeft"
+    >
       <template #title>
-        <view class="title">
-          <wd-text text="导航条" color="#333" blod></wd-text>
-        </view>
+        <slot>
+          <view class="title">
+            <wd-text text="导航条" color="#333" blod />
+          </view>
+        </slot>
       </template>
     </wd-navbar>
   </view>
@@ -15,11 +25,8 @@ defineOptions({
     styleIsolation: 'shared'
   }
 })
-</script>
-<style scoped lang="scss">
-.navbar {
-  :deep(.custom-nav) {
-    background: transparent;
-  }
+function handleClickLeft() {
+  uni.navigateBack()
 }
-</style>
+</script>
+<style scoped lang="scss"></style>

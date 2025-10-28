@@ -2,7 +2,13 @@
   <!-- 课表日期选择器 -->
   <view class="all-course-info">
     <!-- 导航栏 -->
-    <CustomNavbar />
+    <CustomNavbar>
+      <template>
+        <view class="title">
+          <wd-text text="课表" color="#333" blod />
+        </view>
+      </template>
+    </CustomNavbar>
     <view class="date">
       <wd-segmented
         :options="list"

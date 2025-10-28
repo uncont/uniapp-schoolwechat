@@ -1,6 +1,12 @@
 <template>
   <view class="schedule">
-    <CustomNavbar></CustomNavbar>
+    <CustomNavbar>
+      <template>
+        <view class="title">
+          <wd-text text="今日课程" color="#333" blod />
+        </view>
+      </template>
+    </CustomNavbar>
     <view class="weater-info">
       <view class="content-text">
         <wd-row>
@@ -37,10 +43,10 @@
       </view>
       <view class="schedule-info">
         <wd-steps vertical>
-          <wd-step>
+          <wd-step v-for="(course, index) in courses" :key="index">
             <template #icon>
               <view style="display: flex; align-items: center; justify-content: center">
-                <wd-text text="8:30" color="#333" size="18px" bold></wd-text>
+                <wd-text :text="course.time" color="#333" size="18px" bold></wd-text>
               </view>
             </template>
             <template #title></template>
@@ -48,35 +54,12 @@
               <view class="course-card">
                 <wd-card custom-class="card">
                   <template #default>
-                    <wd-text text="大学生创业基础" size="18px" bold color="#e9805b"></wd-text>
+                    <wd-text :text="course.name" size="18px" bold :color="course.color"></wd-text>
                   </template>
                   <template #footer>
                     <view class="other-info">
-                      <wd-text text="老师：" /><wd-text text="张萌" />
-                      <wd-text text=" | 教室" /><wd-text text="春晗楼404" />
-                    </view>
-                  </template>
-                </wd-card>
-              </view>
-            </template>
-          </wd-step>
-          <wd-step>
-            <template #icon>
-              <view style="display: flex; align-items: center; justify-content: center">
-                <wd-text text="8:30" color="#333" size="18px" bold></wd-text>
-              </view>
-            </template>
-            <template #title></template>
-            <template #description>
-              <view class="course-card">
-                <wd-card custom-class="card">
-                  <template #default>
-                    <wd-text text="大学生创业基础" size="18px" bold color="#e9805b"></wd-text>
-                  </template>
-                  <template #footer>
-                    <view class="other-info">
-                      <wd-text text="老师：" /><wd-text text="张萌" />
-                      <wd-text text=" | 教室" /><wd-text text="春晗楼404" />
+                      <wd-text text="老师：" /><wd-text :text="course.teacher" />
+                      <wd-text text=" | 教室" /><wd-text :text="course.classroom" />
                     </view>
                   </template>
                 </wd-card>
@@ -94,13 +77,55 @@ import CustomNavbar from '../../components/CustomNavbar.vue'
 
 const joy = ref('/static/icon/weater.png')
 
+// 课程信息数据
+const courses = ref([
+  {
+    time: '8:30',
+    name: '大学生创业基础',
+    color: '#e9805b',
+    teacher: '张萌',
+    classroom: '春晗楼404'
+  },
+  {
+    time: '8:30',
+    name: '大学生创业基础',
+    color: '#e9805b',
+    teacher: '张萌',
+    classroom: '春晗楼404'
+  },
+  {
+    time: '8:30',
+    name: '大学生创业基础',
+    color: '#e9805b',
+    teacher: '张萌',
+    classroom: '春晗楼404'
+  },
+  {
+    time: '8:30',
+    name: '大学生创业基础',
+    color: '#e9805b',
+    teacher: '张萌',
+    classroom: '春晗楼404'
+  },
+  {
+    time: '8:30',
+    name: '大学生创业基础',
+    color: '#e9805b',
+    teacher: '张萌',
+    classroom: '春晗楼404'
+  }
+])
+
 function PushAllCourseInfo() {
   uni.navigateTo({ url: '/pages/Schedule/AllCourseInfo' })
 }
 </script>
 <style lang="scss" scoped>
 .schedule {
-  background: linear-gradient(45deg, #dde9f8 40%, #c4d9f4 65%, #b3c5fe 100%);
+  :deep(.custom-nav) {
+    background: transparent;
+  }
+  background: linear-gradient(45deg, #f0f7fe 40%, #c4d9f4 75%, #b3c5fe 100%);
 }
 .weater-info {
   padding-right: 24px;
