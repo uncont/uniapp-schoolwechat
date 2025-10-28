@@ -2,7 +2,15 @@
   <view class="mine-page">
     <view class="user-header" :style="{ backgroundImage: `url(${backgroundImage})` }">
       <view class="navbar-wrapper">
-        <CustomNavbar></CustomNavbar>
+        <wd-navbar custom-class="custom-nav" fixed :bordered="false" placeholder safeAreaInsetTop>
+          <template #title>
+            <slot>
+              <view class="title">
+                <wd-text text="我的" color="#fff" blod />
+              </view>
+            </slot>
+          </template>
+        </wd-navbar>
       </view>
       <wd-row custom-class="user-profile">
         <wd-col :span="6" :offset="2">
