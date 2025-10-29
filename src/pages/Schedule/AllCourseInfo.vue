@@ -92,6 +92,11 @@
           </template>
         </wd-table-col>
       </wd-table>
+      <wd-fab position="right-bottom" :expandable="false">
+        <template #trigger>
+          <wd-button icon="refresh" @click="pushRefreshCourseInfo"> 刷新课表</wd-button>
+        </template>
+      </wd-fab>
     </view>
   </view>
 </template>
@@ -99,6 +104,12 @@
 import CustomNavbar from '../../components/CustomNavbar.vue'
 
 import { ref, computed } from 'vue'
+// 跳转刷新课表页面
+function pushRefreshCourseInfo() {
+  uni.navigateTo({
+    url: '/pages/Schedule/RefreshCourseInfo'
+  })
+}
 
 // 定义星期几的数据
 const weekdays = ref([

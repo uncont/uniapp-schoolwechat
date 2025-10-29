@@ -40,6 +40,13 @@
         "navigationBarTitleText": "AllCourseInfo",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/Schedule/RefreshCourseInfo",
+      "style": {
+        "navigationBarTitleText": "RefreshCourseInfo",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {

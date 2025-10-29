@@ -164,10 +164,10 @@ function PushAllCourseInfo() {
 </script>
 <style lang="scss" scoped>
 .schedule {
+  background: linear-gradient(45deg, #f0f7fe 40%, #c4d9f4 75%, #b3c5fe 100%);
   :deep(.custom-nav) {
     background: transparent;
   }
-  background: linear-gradient(45deg, #f0f7fe 40%, #c4d9f4 75%, #b3c5fe 100%);
 }
 .weater-info {
   padding-right: 24px;

@@ -131,11 +131,11 @@ const postsData = ref([
 
 <style scoped lang="scss">
 .mine-page {
+  min-height: 100vh;
+  background: rgb(51, 51, 51, 0.1);
   :deep(.custom-nav) {
     background: transparent;
   }
-  min-height: 100vh;
-  background: rgb(51, 51, 51, 0.1);
 }
 .user-header {
   position: relative;
