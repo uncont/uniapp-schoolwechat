@@ -1,4 +1,5 @@
 <template>
+  <view class="fixed-bg" />
   <view class="warp">
     <!-- 顶部导航栏 -->
     <view class="nav">
@@ -27,122 +28,43 @@
         </template>
       </wd-navbar>
     </view>
-    <view class="index">
-      <view class="top">
-        <!-- 分段器 -->
-        <view class="segmented">
-          <wd-segmented
-            :options="list"
-            v-model:value="active"
-            custom-class="index-segmented"
-          ></wd-segmented>
-        </view>
-        <!-- 轮播图 -->
-        <view class="card-swiper">
-          <wd-swiper
-            autoplay
-            v-model:current="current"
-            custom-indicator-class="custom-indicator-class"
-            custom-image-class="custom-image"
-            custom-next-image-class="custom-image-prev"
-            custom-prev-image-class="custom-image-prev"
-            :indicator="{ type: 'dots' }"
-            :list="swiperList"
-            previousMargin="42px"
-            nextMargin="42px"
-          ></wd-swiper>
-        </view>
-        <!-- 分区功能栏 -->
-        <view class="function-buttons">
-          <wd-grid square :gutter="18" clickable custom-class="custom-grid" :column="4">
-            <wd-grid-item text="二手好物" custom-class="custom-item">
-              <template #icon>
-                <wd-img :width="48" :height="48" :src="icon1" />
-              </template>
-            </wd-grid-item>
-            <wd-grid-item text="课表信息" custom-class="custom-item" @itemclick="PushSchedule">
-              <template #icon>
-                <wd-img :width="48" :height="48" :src="icon2" />
-              </template>
-            </wd-grid-item>
-            <wd-grid-item text="校内点餐" custom-class="custom-item">
-              <template #icon>
-                <wd-img :width="48" :height="48" :src="icon3" />
-              </template>
-            </wd-grid-item>
-            <wd-grid-item text="校内点餐" custom-class="custom-item">
-              <template #icon>
-                <wd-img :width="48" :height="48" :src="icon3" />
-              </template>
-            </wd-grid-item>
-            <wd-grid-item text="二手好物" custom-class="custom-item">
-              <template #icon>
-                <wd-img :width="48" :height="48" :src="icon1" />
-              </template>
-            </wd-grid-item>
-            <wd-grid-item text="课表信息" custom-class="custom-item">
-              <template #icon>
-                <wd-img :width="48" :height="48" :src="icon2" />
-              </template>
-            </wd-grid-item>
-            <wd-grid-item text="校内点餐" custom-class="custom-item">
-              <template #icon>
-                <wd-img :width="48" :height="48" :src="icon3" />
-              </template>
-            </wd-grid-item>
-            <wd-grid-item text="校内点餐" custom-class="custom-item">
-              <template #icon>
-                <wd-img :width="48" :height="48" :src="icon3" />
-              </template>
-            </wd-grid-item>
-          </wd-grid>
-        </view>
-      </view>
-      <!-- 推荐内容 -->
-      <view class="content">
-        <view class="title">
-          <wd-row>
-            <wd-col :span="24"><view>更多为你推荐</view></wd-col>
-          </wd-row>
-        </view>
-        <view class="posts">
-          <ul>
-            <li>
-              <PostsCard></PostsCard>
-            </li>
-          </ul>
-        </view>
-      </view>
-    </view>
+    <wd-tabs v-model="tab" custom-class="index-tab" swipeable>
+      <block>
+        <wd-tab title="关注">
+          <view> <UserFollow /></view>
+        </wd-tab>
+      </block>
+      <block>
+        <wd-tab title="推荐">
+          <IndexPage />
+        </wd-tab>
+      </block>
+      <block>
+        <wd-tab title="热门校园"> <HotTopic /> </wd-tab>
+      </block>
+    </wd-tabs>
+
     <CustomTabbar></CustomTabbar>
   </view>
 </template>
 
 <script setup>
 import CustomTabbar from '../../components/CustomTabbar.vue'
-import PostsCard from './components/PostsCard.vue'
+import IndexPage from './pages/IndexPage.vue'
+import HotTopic from './pages/HotTopic.vue'
+import UserFollow from './pages/UserFollow.vue'
 
 import { testApi } from '../../api/test'
 
 import { ref, onMounted } from 'vue'
 
-//  路由跳转
-function PushSchedule() {
-  console.log('hello')
-
-  uni.navigateTo({
-    url: '/pages/Schedule/ScheduleInfo'
-  })
-}
+const tab = ref(1)
 
 // 系统信息相关数据
 const menuButtonBounding = ref(null)
 const statusBarHeight = ref(0)
 
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
-const icon1 = ref('/static/icon/shopping.png')
-const icon2 = ref('/static/icon/schedule.png')
-const icon3 = ref('/static/icon/catering.png')
 
 onMounted(() => {
   testApi()
@@ -156,27 +78,7 @@ onMounted(() => {
   // #endif
 })
 
-const current = ref(0)
 const keyword = ref('')
-const active = ref('点赞')
-
-const swiperList = ref([
-  'https://wot-ui.cn/assets/redpanda.jpg',
-  'https://wot-ui.cn/assets/capybara.jpg',
-  'https://wot-ui.cn/assets/panda.jpg',
-  'https://wot-ui.cn/assets/moon.jpg',
-  'https://wot-ui.cn/assets/meng.jpg'
-])
-
-const list = ref(['社区', '推荐', '热门校园'])
-
-function handleClick(e) {
-  console.log(e)
-}
-
-function onChange(e) {
-  console.log(e)
-}
 
 // 获取与胶囊按钮对齐的样式
 function getMenuButtonAlignedStyle() {
@@ -198,6 +100,7 @@ function getMenuButtonAlignedStyle() {
 </script>
 
 <style scoped lang="scss">
+// 导航
 .nav {
   margin-bottom: 10px;
   .avatar {
@@ -223,50 +126,12 @@ function getMenuButtonAlignedStyle() {
     align-items: center;
   }
 }
-.segmented {
-  :deep(.index-segmented) {
+// 首页分段器
+:deep(.index-tab) {
+  background: transparent !important;
+  .wd-tabs__nav {
     background: transparent;
-    position: relative;
-  }
-  :deep(.is-active) {
-    transform: scale(1.3);
-  }
-  :deep(.wd-segmented__item--active) {
-    position: absolute;
-    bottom: 0;
-    height: 2px;
-    background-color: pink;
-    width: 20% !important;
-    margin-left: 6.5%;
-  }
-}
-.card-swiper {
-  --wot-swiper-radius: 0;
-  :deep(.custom-indicator-class) {
-    bottom: 16px;
-  }
-  :deep(.custom-image) {
-    border-radius: 12rpx;
-    transform: scale(0.9);
-  }
-  :deep(.custom-image-prev) {
-    height: 168px !important;
-  }
-}
-.function-buttons {
-  :deep(.custom-grid) {
-    padding-bottom: 0 !important;
-  }
-  :deep(.custom-item .wd-grid-item__content) {
-    border-radius: 12px;
-    .wd-grid-item__text {
-      margin: 0;
-    }
-  }
-}
-.content {
-  .title {
-    margin: 0 20px 10px;
+    margin-bottom: 15px;
   }
 }
 </style>

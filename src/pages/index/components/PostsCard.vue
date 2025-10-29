@@ -37,7 +37,7 @@
         </view>
         <view class="img-content">
           <wd-grid :column="3">
-            <wd-grid-item v-for="value in 6">
+            <wd-grid-item v-for="value in 6" :key="value">
               <wd-img mode="aspectFill" custom-class="image" :src="joy" />
             </wd-grid-item>
           </wd-grid>
