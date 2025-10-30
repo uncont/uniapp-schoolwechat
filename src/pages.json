@@ -47,6 +47,13 @@
         "navigationBarTitleText": "RefreshCourseInfo",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/SecondHand/SecondHandMarket",
+      "style": {
+        "navigationBarTitleText": "SecondHandMarket",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {

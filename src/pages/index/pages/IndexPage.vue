@@ -19,7 +19,7 @@
       <!-- 分区功能栏 -->
       <view class="function-buttons">
         <wd-grid square :gutter="18" clickable custom-class="custom-grid" :column="4">
-          <wd-grid-item text="二手好物" custom-class="custom-item">
+          <wd-grid-item text="二手好物" custom-class="custom-item" @itemclick="PushSecondHand">
             <template #icon>
               <wd-img :width="48" :height="48" :src="icon1" />
             </template>
@@ -106,6 +106,13 @@ function PushSchedule() {
 
   uni.navigateTo({
     url: '/pages/Schedule/ScheduleInfo'
+  })
+}
+function PushSecondHand() {
+  console.log('hello')
+
+  uni.navigateTo({
+    url: '/pages/SecondHand/SecondHandMarket'
   })
 }
 </script>
