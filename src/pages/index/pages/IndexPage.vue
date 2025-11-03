@@ -34,27 +34,27 @@
               <wd-img :width="48" :height="48" :src="icon3" />
             </template>
           </wd-grid-item>
-          <wd-grid-item text="校内点餐" custom-class="custom-item">
+          <wd-grid-item text="成绩查询" custom-class="custom-item">
             <template #icon>
               <wd-img :width="48" :height="48" :src="icon3" />
             </template>
           </wd-grid-item>
-          <wd-grid-item text="二手好物" custom-class="custom-item">
+          <wd-grid-item text="宝贝租借" custom-class="custom-item" @itemclick="PushRentMarket">
             <template #icon>
               <wd-img :width="48" :height="48" :src="icon1" />
             </template>
           </wd-grid-item>
-          <wd-grid-item text="课表信息" custom-class="custom-item">
+          <wd-grid-item text="游戏组队" custom-class="custom-item">
             <template #icon>
               <wd-img :width="48" :height="48" :src="icon2" />
             </template>
           </wd-grid-item>
-          <wd-grid-item text="校内点餐" custom-class="custom-item">
+          <wd-grid-item text="一起拼车" custom-class="custom-item">
             <template #icon>
               <wd-img :width="48" :height="48" :src="icon3" />
             </template>
           </wd-grid-item>
-          <wd-grid-item text="校内点餐" custom-class="custom-item">
+          <wd-grid-item text="活动" custom-class="custom-item">
             <template #icon>
               <wd-img :width="48" :height="48" :src="icon3" />
             </template>
@@ -102,18 +102,17 @@ const swiperList = ref([
 const current = ref(0)
 //  路由跳转
 function PushSchedule() {
-  console.log('hello')
-
   uni.navigateTo({
     url: '/pages/Schedule/ScheduleInfo'
   })
 }
 function PushSecondHand() {
-  console.log('hello')
-
   uni.navigateTo({
     url: '/pages/SecondHand/SecondHandMarket'
   })
+}
+function PushRentMarket() {
+  uni.navigateTo({ url: '/pages/Rent/RentMarket' })
 }
 </script>
 <style scoped lang="scss">

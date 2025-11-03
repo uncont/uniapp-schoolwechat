@@ -61,6 +61,20 @@
         "navigationBarTitleText": "GoodsDetails",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/Rent/RentMarket",
+      "style": {
+        "navigationBarTitleText": "RentMarket",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Rent/RentDetails",
+      "style": {
+        "navigationBarTitleText": "RentDetails",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {
