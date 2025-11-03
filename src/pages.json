@@ -54,6 +54,13 @@
         "navigationBarTitleText": "SecondHandMarket",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/SecondHand/GoodsDetails",
+      "style": {
+        "navigationBarTitleText": "GoodsDetails",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {

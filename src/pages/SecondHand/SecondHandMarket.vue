@@ -60,7 +60,7 @@
                   <wd-text text="元" size="16px" />
                 </template>
               </wd-text>
-              <wd-button type="info" size="small">GO ></wd-button>
+              <wd-button type="info" size="small" @click="pushGoodDetails">GO ></wd-button>
             </view>
           </template>
         </wd-card>
@@ -72,6 +72,12 @@
 import CustomNavBar from '../../components/CustomNavbar.vue'
 
 import { ref } from 'vue'
+
+function pushGoodDetails() {
+  uni.navigateTo({
+    url: '/pages/SecondHand/GoodsDetails'
+  })
+}
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 const tab = ref(0)
 </script>
