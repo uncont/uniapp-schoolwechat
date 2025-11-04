@@ -99,7 +99,7 @@ function PushDetail() {
     padding: 4px;
     width: 100%;
     box-sizing: border-box;
-    image {
+    :deep(image) {
       border-radius: 6px;
       height: auto;
       aspect-ratio: 5/6;

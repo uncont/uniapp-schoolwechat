@@ -17,8 +17,25 @@
   </view>
 </template>
 <script setup>
-import { ref } from 'vue'
-const tabbar = ref(0)
+import { computed, onMounted } from 'vue'
+import { useSettingStores } from '../stores/settingStores.js'
+
+const settingStores = useSettingStores()
+const tabbar = computed({
+  get() {
+    return settingStores.tabbarIndex
+  },
+  set(val) {
+    settingStores.setTabbarIndex(val)
+  }
+})
+
+onMounted(() => {
+  const pages = getCurrentPages()
+  const current = pages[pages.length - 1]
+  const routePath = current?.route ? `/${current.route}` : ''
+  settingStores.setTabbarIndexByRoute(routePath)
+})
 function changeTabbar(value) {
   const index = value.value
   switch (index) {

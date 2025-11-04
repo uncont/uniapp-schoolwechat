@@ -96,8 +96,10 @@ const tab = ref(0)
   .content {
     display: flex;
     justify-content: space-around;
-    :deep(.topic-img image) {
-      border-radius: 6px;
+    :deep(.topic-img) {
+      :deep(image) {
+        border-radius: 6px;
+      }
     }
     .text {
       padding-right: 20px;
@@ -146,7 +148,7 @@ const tab = ref(0)
     :deep(.goods-image) {
       width: 100%;
       box-sizing: border-box;
-      image {
+      :deep(image) {
         border-radius: 6px 6px 0 0;
         height: auto;
         aspect-ratio: 12/13;

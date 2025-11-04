@@ -1,6 +1,7 @@
 <template>
   <view class="mine-page">
     <view class="user-header" :style="{ backgroundImage: `url(${backgroundImage})` }">
+      <!-- 导航栏 -->
       <view class="navbar-wrapper">
         <wd-navbar custom-class="custom-nav" fixed :bordered="false" placeholder safeAreaInsetTop>
           <template #title>
@@ -12,13 +13,21 @@
           </template>
         </wd-navbar>
       </view>
+      <!-- 用户信息栏 -->
       <wd-row custom-class="user-profile">
         <wd-col :span="6" :offset="2">
-          <wd-img :width="72" :height="72" round :src="joy" mode="aspecFill" />
+          <wd-img
+            :width="72"
+            :height="72"
+            round
+            :src="avatarUrl"
+            mode="aspecFill"
+            @click="handleWechatLogin"
+          />
         </wd-col>
         <wd-col :span="16">
           <view class="user-info">
-            <wd-text text="用户名称" bold color="#333" size="20px" />
+            <wd-text :text="displayName" bold color="#333" size="20px" />
             <wd-text text="还没有填写个性签名，待填写" />
           </view>
         </wd-col>
@@ -27,6 +36,7 @@
         <wd-button custom-class="profile-edit-button" icon="edit-1" size="small">编辑 </wd-button>
       </view>
     </view>
+
     <view class="user-statistics">
       <wd-grid clickable custom-class="statistics-grid">
         <wd-grid-item v-for="item in userData" :key="item.id">
@@ -39,6 +49,7 @@
         </wd-grid-item>
       </wd-grid>
     </view>
+
     <view class="transaction-section">
       <wd-card custom-class="transaction-card">
         <template #title>
@@ -96,14 +107,34 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import CustomNavbar from '../../components/CustomNavbar.vue'
-import CustomTabbar from '../../components/CustomTabbar.vue'
+import { ref, computed } from 'vue'
+import CustomTabbar from '@/components/CustomTabbar.vue'
+import { useUserStore } from '@/stores/user'
 
-const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
+const user = useUserStore()
+
+const handleWechatLogin = async () => {
+  try {
+    await user.login()
+  } catch (error) {
+    console.error('登录失败:', error)
+    uni.showToast({
+      title: error.message || '登录失败',
+      icon: 'none'
+    })
+  }
+}
+const joy = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
 const backgroundImage = ref(
   'https://s.panlai.com/zb_users/upload/2025/06/20250626132535175091553591779.jpg-arthumbs'
 )
+
+const displayName = computed(() => {
+  return user.userInfo?.nickName || user.userInfo?.nickname || '未登录'
+})
+const avatarUrl = computed(() => {
+  return user.userInfo?.avatarUrl || joy.value
+})
 
 // 用户数据：收藏：4，关注：124，浏览数：847，粉丝：34，帖子：3
 const userData = ref([

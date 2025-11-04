@@ -70,8 +70,10 @@ const tab = ref(0)
   .content {
     display: flex;
     justify-content: space-around;
-    :deep(.topic-img image) {
-      border-radius: 6px;
+    :deep(.topic-img) {
+      :deep(image) {
+        border-radius: 6px;
+      }
     }
     .text {
       padding-right: 20px;

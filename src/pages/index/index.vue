@@ -54,8 +54,6 @@ import IndexPage from './pages/IndexPage.vue'
 import HotTopic from './pages/HotTopic.vue'
 import UserFollow from './pages/UserFollow.vue'
 
-import { testApi } from '../../api/test'
-
 import { ref, onMounted } from 'vue'
 
 const tab = ref(1)
@@ -67,8 +65,6 @@ const statusBarHeight = ref(0)
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 
 onMounted(() => {
-  testApi()
-
   // 获取系统信息
   statusBarHeight.value = uni.getSystemInfoSync().statusBarHeight
 
