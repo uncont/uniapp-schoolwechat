@@ -16,11 +16,11 @@ export function scrapeClassSchedule(data) {
     needToken: true
   })
 }
-export function getClassSchedule(data) {
+export function getClassSchedule(userId) {
   return request({
     url: `/ClassSchedule/getClassSchedule`,
     method: 'GET',
-    data: data,
+    data: userId,
     needToken: true
   })
 }

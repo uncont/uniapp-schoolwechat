@@ -28,13 +28,26 @@
   </view>
 </template>
 <script setup>
-import CustomNavbar from '../../components/CustomNavbar.vue'
+import CustomNavbar from '@/components/CustomNavbar.vue'
 import CourseTimeline from './commponents/CourseTimeline.vue'
 import WeatherInfo from './commponents/WeatherInfo.vue'
+import { onMounted, computed } from 'vue'
+import { useCourseStore } from '../../stores/CourseInfo'
+
+const courseStore = useCourseStore()
+
+const courseInfo = computed(() => {
+  return courseStore.courseInfo
+})
 
 function PushAllCourseInfo() {
   uni.navigateTo({ url: '/pages/Schedule/AllCourseInfo' })
 }
+
+onMounted(async () => {
+  await courseStore.getCourseInfo()
+  console.log(courseInfo.value)
+})
 </script>
 <style lang="scss" scoped>
 .schedule {

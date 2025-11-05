@@ -49,19 +49,15 @@
 </template>
 <script setup>
 import CustomNavbar from '@/components/CustomNavbar.vue'
-import { storeToRefs } from 'pinia'
-import { useUserStore } from '@/stores/user'
 import { ref, onMounted, reactive } from 'vue'
 import { getQRCode } from '@/api/classSchedule'
 import { useCourseStore } from '@/stores/CourseInfo'
 
-const userStore = useUserStore()
 const courseStore = useCourseStore()
-const { userId } = storeToRefs(userStore)
 const QRCode = ref('')
 const param = reactive({
   ticket: '',
-  userId: userId.value
+  userId: ''
 })
 
 const scrapeCourseInfo = async () => {

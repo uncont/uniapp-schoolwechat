@@ -8,6 +8,7 @@
             <wd-text :text="course.time" color="#333" size="18px" bold></wd-text>
           </view>
         </template>
+        <template #title />
         <!-- 课程卡片 -->
         <template #description>
           <view class="course-card">
