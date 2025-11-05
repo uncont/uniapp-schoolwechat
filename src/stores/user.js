@@ -3,10 +3,9 @@ import { defineStore } from 'pinia'
 import { userLogin, fetchUserProfile } from '@/api/user.js'
 
 export const useUserStore = defineStore('user', () => {
-  const userName = ref()
+  const userId = ref(uni.getStorageSync('userId') || null)
   const token = ref(uni.getStorageSync('token') || '')
   const userInfo = ref(uni.getStorageSync('userInfo') || null)
-
   const isLoggedIn = computed(() => !!token.value)
 
   // 设置token
@@ -29,27 +28,27 @@ export const useUserStore = defineStore('user', () => {
   }
   // 用户登录
   async function login() {
-    const data = await userLogin()
-    const receivedToken = data?.token
-    const receivedUser = data?.userInfo
-    userName.value = data?.username
-    if (!receivedToken) {
-      console.error('未能从以下数据中提取token:', data)
-      throw new Error('登录失败：未获取到token')
-    }
-    setToken(receivedToken)
-    if (receivedUser) {
-      setUserInfo(receivedUser)
-    } else {
+    try {
+      const data = await userLogin()
+      const receivedToken = data?.token
+      setToken(receivedToken)
+      userId.value = data?.userId
+      if (userId.value) {
+        uni.setStorageSync('userId', userId.value)
+      } else {
+        uni.removeStorageSync('userId')
+      }
+    } catch (error) {}
+    try {
       await fetchUserInfo()
-    }
+    } catch (error) {}
     return true
   }
   // 获取用户信息
   async function fetchUserInfo() {
     if (!token.value) return null
     try {
-      const info = await fetchUserProfile(userName.value)
+      const info = await fetchUserProfile(userId.value)
       setUserInfo(info)
       return info
     } catch (err) {
@@ -70,6 +69,7 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     token,
+    userId,
     userInfo,
     isLoggedIn,
     setToken,

@@ -14,9 +14,9 @@ export async function userLogin() {
 }
 
 // 从后端获取用户资料
-export function fetchUserProfile(userName) {
+export function fetchUserProfile(userId) {
   return request({
-    url: `/users/getUserInfo/${userName}`,
+    url: `/users/getUserInfo/${userId}`,
     method: 'GET',
     needToken: true
   })
