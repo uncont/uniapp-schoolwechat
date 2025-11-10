@@ -16,14 +16,15 @@
       <view class="title">
         <view class="text">
           <wd-text text="今日课程" color="#333" bold size="18px" /><wd-text
-            text="2025年5月18日 周六"
+            :text="date"
             size="12px"
           />
         </view>
         <wd-button custom-class="button" @click="PushAllCourseInfo()">全部课表 ></wd-button>
       </view>
       <!-- 课程时间轴 -->
-      <CourseTimeline />
+      <CourseTimeline v-if="todayCourses.length > 0" :courseInfo="todayCourses" />
+      <wd-status-tip v-else image="content" tip="今日课程已结束，好好休息吧" />
     </view>
   </view>
 </template>
@@ -31,22 +32,33 @@
 import CustomNavbar from '@/components/CustomNavbar.vue'
 import CourseTimeline from './commponents/CourseTimeline.vue'
 import WeatherInfo from './commponents/WeatherInfo.vue'
-import { onMounted, computed } from 'vue'
-import { useCourseStore } from '../../stores/CourseInfo'
-
+import { ref, onMounted, computed } from 'vue'
+import { useCourseStore } from '@/stores/CourseInfo'
+import { getTodayInfo, getTodayCourses } from '@/utils/schedule'
+// 课表仓库
 const courseStore = useCourseStore()
+// 日期
+const date = computed(() => {
+  return getTodayInfo({
+    format: 'yearDateWeekday'
+  })
+})
 
+// 初始化课表数据
 const courseInfo = computed(() => {
   return courseStore.courseInfo
 })
+const todayCourses = computed(() => {
+  return getTodayCourses(courseInfo.value)
+})
 
+// 跳转到全部课表页面
 function PushAllCourseInfo() {
   uni.navigateTo({ url: '/pages/Schedule/AllCourseInfo' })
 }
 
 onMounted(async () => {
   await courseStore.getCourseInfo()
-  console.log(courseInfo.value)
 })
 </script>
 <style lang="scss" scoped>

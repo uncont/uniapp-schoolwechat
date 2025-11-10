@@ -16,7 +16,7 @@
       <wd-row>
         <wd-col :span="22" :offset="2"
           ><wd-text text="义乌工商职业技术学院" size="12px"></wd-text
-          ><wd-text custom-class="date" text="05-18" color="#333" size="12px"
+          ><wd-text custom-class="date" :text="date" color="#333" size="12px"
         /></wd-col>
       </wd-row>
     </view>
@@ -28,6 +28,10 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+import { getTodayInfo } from '@/utils/schedule'
+const date = getTodayInfo({
+  format: 'date'
+})
 const joy = ref('/static/icon/weater.png')
 defineOptions({
   options: {

@@ -19,15 +19,27 @@
       <wd-card>
         <template #title>
           <view class="title">
-            <wd-text text="长按保存二维码，打开微信扫一扫" color="#333" bold size="18px" />
+            <wd-steps :active="active" align-center>
+              <wd-step title="步骤1" description="保存二维码" />
+              <wd-step title="步骤2" description="打开微信扫码登录" />
+              <wd-step title="步骤3" description="爬取课表信息" />
+            </wd-steps>
           </view>
         </template>
         <template #default>
           <view class="QRCode">
-            <wd-img width="260px " height="260px" :src="QRCode" show-menu-by-longpress>
+            <wd-img
+              width="260px "
+              height="260px"
+              :src="QRCode"
+              show-menu-by-longpress
+              @load="active = 1"
+            >
               <template #error>
                 <view class="error-wrap">
-                  <wd-button>点击重新获取二维码</wd-button>
+                  <wd-button @click="reGetQRCode" icon="refresh" type="text"
+                    >点击重新获取二维码</wd-button
+                  >
                 </view>
               </template>
               <template #loading>
@@ -49,27 +61,45 @@
 </template>
 <script setup>
 import CustomNavbar from '@/components/CustomNavbar.vue'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { getQRCode } from '@/api/classSchedule'
 import { useCourseStore } from '@/stores/CourseInfo'
 
 const courseStore = useCourseStore()
 const QRCode = ref('')
+const active = ref(0)
 const param = reactive({
   ticket: '',
   userId: ''
 })
-
+// 声明定时器变量
+let errorTimer = null
 const scrapeCourseInfo = async () => {
   try {
     await courseStore.scrapeCourseInfo(param)
   } catch (error) {}
 }
 
-onMounted(async () => {
+async function reGetQRCode() {
   const res = await getQRCode()
   QRCode.value = res.base64Image || ''
   param.ticket = res.ticket
+}
+
+onMounted(() => {
+  reGetQRCode()
+  // 设置定时器，让用户重新获取二维码
+  errorTimer = setTimeout(() => {
+    QRCode.value = 'data:image/png;base64,invalid_base64_string'
+  }, 20000)
+})
+
+// 组件卸载前清除定时器
+onBeforeUnmount(() => {
+  if (errorTimer) {
+    clearTimeout(errorTimer)
+    errorTimer = null
+  }
 })
 </script>
 <style lang="scss" scoped>
@@ -92,6 +122,10 @@ onMounted(async () => {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .loading-wrap,
+  .error-wrap {
+    background: rgb(51, 51, 51, 0.1);
   }
 }
 </style>
