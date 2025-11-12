@@ -38,7 +38,9 @@
         <view class="img-content">
           <wd-grid :column="3">
             <wd-grid-item v-for="value in 6" :key="value">
-              <wd-img mode="aspectFill" custom-class="image" :src="joy" />
+              <view class="image">
+                <wd-img mode="aspectFill" custom-class="img" :src="joy" />
+              </view>
             </wd-grid-item>
           </wd-grid>
         </view>
@@ -90,23 +92,25 @@ function PushDetail() {
     }
   }
 }
-// 图像组样式
 .img-content {
   :deep(.wd-grid-item__content) {
     padding: 0;
   }
-  :deep(.image) {
-    padding: 4px;
-    width: 100%;
+}
+// 图片样式
+.image {
+  :deep(.img) {
     box-sizing: border-box;
-    :deep(image) {
+    padding: 1px;
+    width: 100%;
+    aspect-ratio: 5/6;
+    .wd-img__image {
       border-radius: 6px;
-      height: auto;
-      aspect-ratio: 5/6;
     }
   }
 }
-//底部样式
+
+// 底部样式
 .function-button {
   display: flex;
   justify-content: space-around;
