@@ -1,5 +1,5 @@
 // 1. 定义基础URL（通常根据环境变量切换）
-const baseURL = import.meta.env.VITE_API_BASE_URL || '默认地址'
+const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 // 2. 定义通用请求方法
 function request(options) {

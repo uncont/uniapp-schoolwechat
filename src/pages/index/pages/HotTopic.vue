@@ -42,6 +42,7 @@
       </ul>
     </view>
   </view>
+  <wd-gap safe-area-bottom height="120rpx"></wd-gap>
 </template>
 <script setup>
 defineOptions({
@@ -70,10 +71,8 @@ const tab = ref(0)
   .content {
     display: flex;
     justify-content: space-around;
-    :deep(.topic-img) {
-      :deep(image) {
-        border-radius: 6px;
-      }
+    :deep(.wd-img__image) {
+      border-radius: 6px;
     }
     .text {
       padding-right: 20px;

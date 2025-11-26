@@ -11,16 +11,10 @@
         <view class="title">
           <view class="user">
             <view class="avatar">
-              <wd-img
-                :width="36"
-                :height="36"
-                round
-                mode="aspectFill"
-                src="https://wot-ui.cn/assets/redpanda.jpg"
-              />
+              <wd-img :width="36" :height="36" round mode="aspectFill" :src="posts.authorAvatar" />
             </view>
             <view class="userName">
-              <wd-text text="手游研究社" bold custom-class="custom-text" color="#333" />
+              <wd-text :text="posts.authorName" bold custom-class="custom-text" color="#333" />
             </view>
           </view>
           <view class="Follow">
@@ -30,10 +24,7 @@
       </template>
       <template #default>
         <view class="text-content">
-          <wd-text
-            text="一般的，检举内容由承办的党的委员会或纪律检查委员会将处理意见或复议、复查结论同申诉人见面，听取其意见。复议、复查的结论和决定，应交给申诉人一份。"
-            color="#333"
-          />
+          <wd-text :text="posts.excerpt" color="#333" />
         </view>
         <view class="img-content">
           <wd-grid :column="3">
@@ -47,9 +38,17 @@
       </template>
       <template #footer>
         <view class="function-button">
-          <view><wd-button type="text" icon="thumb-up">点赞</wd-button></view>
-          <view><wd-button type="text" icon="chat1" @click="PushDetail()">评论</wd-button></view>
-          <view><wd-button type="text" icon="star">收藏</wd-button></view>
+          <view>
+            <wd-button type="text" icon="thumb-up">{{ posts.likeCount }}</wd-button>
+          </view>
+          <view>
+            <wd-button type="text" icon="chat1" @click="PushDetail()">
+              {{ posts.commentCount }}
+            </wd-button>
+          </view>
+          <view>
+            <wd-button type="text" icon="star">{{ posts.favoriteCount }}</wd-button>
+          </view>
         </view>
       </template>
     </wd-card>
@@ -57,6 +56,12 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+const props = defineProps({
+  posts: {
+    type: Object,
+    required: true
+  }
+})
 defineOptions({
   options: {
     styleIsolation: 'shared'

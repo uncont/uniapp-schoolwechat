@@ -72,12 +72,13 @@
       <view class="posts">
         <ul>
           <li>
-            <PostsCard></PostsCard>
+            <!-- <PostsCard></PostsCard> -->
           </li>
         </ul>
       </view>
     </view>
   </view>
+  <wd-gap safe-area-bottom height="120rpx"></wd-gap>
 </template>
 <script setup>
 import PostsCard from '../../index/components/PostsCard.vue'
@@ -99,7 +100,7 @@ const swiperList = ref([
   'https://wot-ui.cn/assets/meng.jpg'
 ])
 
-const current = ref(0)
+const current = ref(2)
 //  路由跳转
 function PushSchedule() {
   uni.navigateTo({

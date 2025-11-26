@@ -75,12 +75,20 @@
         "navigationBarTitleText": "RentDetails",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/Form/PostsForm",
+      "style": {
+        "navigationBarTitleText": "PostsForm",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {
     "custom": true,
     "list": [
       { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/Form/PostsForm", "text": "发布" },
       { "pagePath": "pages/Mine/MineIndex", "text": "我的" }
     ]
   },
