@@ -1,9 +1,27 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getFollowPosts } from '@/api/posts'
+import { getFollowPosts, getHomePostsList } from '@/api/posts'
 
 export const usePostsStore = defineStore('posts', () => {
+  // 首页推荐帖子列表
+  const recommendPostList = ref([])
+  // 关注帖子列表
   const FollowPostsList = ref([])
+
+  const getRecommendPost = async data => {
+    const params = {
+      pageNum: data?.pageNum || '1',
+      pageSize: data?.pageSize || '10'
+    }
+    const result = await getHomePostsList(params)
+    recommendPostList.value = result
+    return recommendPostList.value
+  }
+  /**
+   * 获取用户关注文章
+   * @param {*} data
+   * @returns
+   */
   const fetchFollowPosts = async data => {
     const params = {
       userId: data.userId,
@@ -15,8 +33,11 @@ export const usePostsStore = defineStore('posts', () => {
     FollowPostsList.value = result
     return FollowPostsList.value
   }
+
   return {
     FollowPostsList,
-    fetchFollowPosts
+    fetchFollowPosts,
+    recommendPostList,
+    getRecommendPost
   }
 })

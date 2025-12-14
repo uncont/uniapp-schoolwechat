@@ -71,8 +71,8 @@
       </view>
       <view class="posts">
         <ul>
-          <li>
-            <!-- <PostsCard></PostsCard> -->
+          <li v-for="(posts, index) in postsList" :key="index">
+            <PostsCard :posts="posts"></PostsCard>
           </li>
         </ul>
       </view>
@@ -81,8 +81,22 @@
   <wd-gap safe-area-bottom height="120rpx"></wd-gap>
 </template>
 <script setup>
-import PostsCard from '../../index/components/PostsCard.vue'
-import { ref } from 'vue'
+import PostsCard from '../components/PostsCard.vue'
+import { ref, onMounted, computed } from 'vue'
+import { usePostsStore } from '@/stores/PostsInfo'
+// 帖子
+const postsStore = usePostsStore()
+const postsList = computed(() => {
+  return postsStore.recommendPostList
+})
+//
+onMounted(async () => {
+  const params = {
+    pageNum: '1',
+    pageSize: '10'
+  }
+  await postsStore.getRecommendPost(params)
+})
 defineOptions({
   options: {
     styleIsolation: 'shared'
