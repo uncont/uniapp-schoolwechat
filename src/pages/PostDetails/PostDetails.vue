@@ -1,7 +1,8 @@
 <template>
+  <!-- 导航栏 -->
   <view class="navbar">
-    <wd-navbar left-arrow safeAreaInsetTop>
-      <template #title>
+    <CustomNavbar>
+      <template>
         <wd-row custom-class="nav-row">
           <wd-col :span="4" custom-class="nav-col">
             <wd-img :width="36" :height="36" :round="true" :src="joy" />
@@ -14,7 +15,7 @@
           </wd-col>
         </wd-row>
       </template>
-    </wd-navbar>
+    </CustomNavbar>
   </view>
   <view class="content">
     <view class="card">
@@ -22,6 +23,7 @@
         <template #default> 我是卡片的内容 </template>
       </wd-card>
     </view>
+    <!--评论区 -->
     <view class="comment">
       <view class="segmented">
         <wd-row>
@@ -85,6 +87,7 @@
 </template>
 ,
 <script setup>
+import CustomNavbar from '@/components/CustomNavbar'
 import { ref } from 'vue'
 
 const list = ref(['评论', '点赞', '贡献', '打赏'])
@@ -96,6 +99,9 @@ const current = ref('点赞')
 
 <style scoped lang="scss">
 .navbar {
+  :deep(.wd-navbar__title) {
+    margin-left: 48px;
+  }
   :deep(.nav-row) {
     height: 100%;
   }

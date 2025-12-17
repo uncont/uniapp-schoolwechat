@@ -22,33 +22,33 @@
           </view>
         </view>
       </template>
+      <!-- 帖子内容——展示帖子文本内容，图片组 -->
       <template #default>
-        <view class="text-content">
-          <wd-text :text="posts.excerpt" color="#333" />
-        </view>
-        <view class="img-content">
-          <wd-grid :column="3">
-            <wd-grid-item v-for="value in 6" :key="value">
-              <view class="image">
-                <wd-img mode="aspectFill" custom-class="img" :src="joy" />
-              </view>
-            </wd-grid-item>
-          </wd-grid>
+        <view class="content" @click="PushDetail()">
+          <!-- 文本内容 -->
+          <view class="text-content">
+            <wd-text :text="posts.excerpt" color="#333" />
+          </view>
+          <!-- 图片组 -->
+          <view class="img-content">
+            <wd-grid :column="3">
+              <wd-grid-item v-for="value in 6" :key="value">
+                <view class="image" @click.stop>
+                  <wd-img mode="aspectFill" custom-class="img" :src="joy" :enable-preview="true" />
+                </view>
+              </wd-grid-item>
+            </wd-grid>
+          </view>
         </view>
       </template>
+      <!-- 帖子底部——功能按钮：点赞，评论，收藏 -->
       <template #footer>
         <view class="function-button">
-          <view>
-            <wd-button type="text" icon="thumb-up">{{ posts.likeCount }}</wd-button>
-          </view>
-          <view>
-            <wd-button type="text" icon="chat1" @click="PushDetail()">
-              {{ posts.commentCount }}
-            </wd-button>
-          </view>
-          <view>
-            <wd-button type="text" icon="star">{{ posts.favoriteCount }}</wd-button>
-          </view>
+          <wd-button type="text" icon="thumb-up">{{ posts.likeCount }}</wd-button>
+          <wd-button type="text" icon="chat1" @click="PushDetail()">{{
+            posts.commentCount
+          }}</wd-button>
+          <wd-button type="text" icon="star">{{ posts.favoriteCount }}</wd-button>
         </view>
       </template>
     </wd-card>
@@ -62,18 +62,19 @@ const props = defineProps({
     required: true
   }
 })
-defineOptions({
-  options: {
-    styleIsolation: 'shared'
-  }
-})
 
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
+// 跳转到帖子详情页
 function PushDetail() {
   uni.navigateTo({
     url: '/pages/PostDetails/PostDetails'
   })
 }
+defineOptions({
+  options: {
+    styleIsolation: 'shared'
+  }
+})
 </script>
 <style scoped lang="scss">
 //卡片样式
