@@ -82,6 +82,13 @@
         "navigationBarTitleText": "PostsForm",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/Message/MessageList",
+      "style": {
+        "navigationBarTitleText": "MessageList",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {
@@ -89,7 +96,8 @@
     "list": [
       { "pagePath": "pages/index/index", "text": "首页" },
       { "pagePath": "pages/Form/PostsForm", "text": "发布" },
-      { "pagePath": "pages/Mine/MineIndex", "text": "我的" }
+      { "pagePath": "pages/Mine/MineIndex", "text": "我的" },
+      { "pagePath": "pages/Message/MessageList", "text": "消息" }
     ]
   },
   "globalStyle": {

@@ -9,7 +9,7 @@
       @change="changeTabbar"
     >
       <wd-tabbar-item title="首页" icon="home"></wd-tabbar-item>
-      <wd-tabbar-item title="消息" icon="chat"></wd-tabbar-item>
+      <wd-tabbar-item title="消息" icon="chat" :value="200"></wd-tabbar-item>
       <wd-tabbar-item>
         <template #icon>
           <view class="add">
@@ -56,7 +56,9 @@ function changeTabbar(value) {
       })
       break
     case 1:
-      console.log(index)
+      uni.switchTab({
+        url: '/pages/Message/MessageList'
+      })
 
       break
     case 2:
