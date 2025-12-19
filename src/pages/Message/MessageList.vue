@@ -21,7 +21,7 @@
     >
       <view class="message-list">
         <wd-card type="rectangle" custom-class="message-card" v-for="value in 10" :key="value">
-          <view class="message-info">
+          <view class="message-info" @click="pushMessageInfo">
             <view class="left">
               <wd-img :width="40" :height="40" round :src="joy" />
             </view>
@@ -69,6 +69,13 @@ const onRefresh = () => {
     })
   }, 1500)
 }
+// 跳转聊天信息页
+function pushMessageInfo() {
+  console.log('hello')
+  uni.navigateTo({
+    url: '/pages/Message/page/MessageInfo'
+  })
+}
 </script>
 <style lang="scss" scoped>
 .container {
@@ -92,8 +99,12 @@ const onRefresh = () => {
   :deep(.message-card) {
     margin-bottom: 0;
   }
+  :deep(.wd-card__content) {
+    padding: 0 !important;
+  }
   .message-info {
     display: flex;
+    padding: var(--wot-card-rectangle-content-padding, 16px 0);
     .left {
       flex-shrink: 0;
       margin-right: 20rpx;

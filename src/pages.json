@@ -89,6 +89,13 @@
         "navigationBarTitleText": "MessageList",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/Message/page/MessageInfo",
+      "style": {
+        "navigationBarTitleText": "MessageInfo",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {
