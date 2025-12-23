@@ -96,6 +96,13 @@
         "navigationBarTitleText": "MessageInfo",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/ShoppingCat/ShoppingCat",
+      "style": {
+        "navigationBarTitleText": "ShoppingCat",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {
@@ -104,7 +111,8 @@
       { "pagePath": "pages/index/index", "text": "首页" },
       { "pagePath": "pages/Form/PostsForm", "text": "发布" },
       { "pagePath": "pages/Mine/MineIndex", "text": "我的" },
-      { "pagePath": "pages/Message/MessageList", "text": "消息" }
+      { "pagePath": "pages/Message/MessageList", "text": "消息" },
+      { "pagePath": "pages/ShoppingCat/ShoppingCat", "text": "购物车" }
     ]
   },
   "globalStyle": {

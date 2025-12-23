@@ -68,7 +68,9 @@ function changeTabbar(value) {
 
       break
     case 3:
-      console.log(index)
+      uni.switchTab({
+        url: '/pages/ShoppingCat/ShoppingCat'
+      })
 
       break
     case 4:
