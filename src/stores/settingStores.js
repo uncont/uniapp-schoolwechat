@@ -9,10 +9,11 @@ export const useSettingStores = defineStore('settingStores', {
       this.tabbarIndex = index
     },
     setTabbarIndexByRoute(routePath) {
-      // Map route path to tab index for custom tabbar
       const routeToIndexMap = {
         '/pages/index/index': 0,
-        '/pages/Mine/MineIndex': 3
+        '/pages/Message/MessageList': 1,
+        '/pages/ShoppingCat/ShoppingCat': 3,
+        '/pages/Mine/MineIndex': 4
       }
       if (routePath && routeToIndexMap.hasOwnProperty(routePath)) {
         this.tabbarIndex = routeToIndexMap[routePath]
@@ -20,5 +21,3 @@ export const useSettingStores = defineStore('settingStores', {
     }
   }
 })
-
-

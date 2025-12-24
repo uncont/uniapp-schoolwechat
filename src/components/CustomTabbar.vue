@@ -9,7 +9,7 @@
       @change="changeTabbar"
     >
       <wd-tabbar-item title="首页" icon="home"></wd-tabbar-item>
-      <wd-tabbar-item title="消息" icon="chat" :value="200"></wd-tabbar-item>
+      <wd-tabbar-item title="消息" icon="chat"></wd-tabbar-item>
       <wd-tabbar-item>
         <template #icon>
           <view class="add">
@@ -17,7 +17,7 @@
           </view>
         </template>
       </wd-tabbar-item>
-      <wd-tabbar-item title="订单" icon="cart"></wd-tabbar-item>
+      <wd-tabbar-item title="购物车" icon="cart"></wd-tabbar-item>
       <wd-tabbar-item title="我的" icon="user"></wd-tabbar-item>
     </wd-tabbar>
   </view>
@@ -59,19 +59,17 @@ function changeTabbar(value) {
       uni.switchTab({
         url: '/pages/Message/MessageList'
       })
-
       break
     case 2:
+      // 发布按钮，跳转到发布页面
       uni.switchTab({
         url: '/pages/Form/PostsForm'
       })
-
       break
     case 3:
       uni.switchTab({
         url: '/pages/ShoppingCat/ShoppingCat'
       })
-
       break
     case 4:
       uni.switchTab({

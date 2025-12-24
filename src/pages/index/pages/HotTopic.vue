@@ -57,23 +57,21 @@ const postsCategories = computed(() => postsStore.postsCategories)
 const CategoriesPosts = ref([])
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 const tab = ref(0)
-//  切换分类
-async function handleChange(value) {
-  const categoriesId = postsCategories.value[value.index].categoriesId
-  await fetchCategoriesOfPosts(categoriesId)
+function handleChange(value) {
+  // 根据组件API，value可能是事件对象或实际值
+  // 尝试获取实际的标签索引
+  const actualValue = typeof value === 'object' ? value.index || value.detail : value
+  tab.value = actualValue
+  console.log(`选中标签:${actualValue}`)
+  
+  // 在这里可以根据选中的标签加载对应分类的帖子
+  // const getCategoriesOfPostsData = {
+  //   pageNum: '1',
+  //   pageSize: '10',
+  //   categoriesId: actualValue + 1 // 假设ID从1开始，与索引对应
+  // }
+  // CategoriesPosts.value = await postsStore.getCategoriesOfPosts(getCategoriesOfPostsData)
 }
-// 获取分类动态列表
-async function fetchCategoriesOfPosts(id) {
-  // 获取分类动态列表
-  const getCategoriesOfPostsData = {
-    pageNum: '1',
-    pageSize: '10',
-    // 默认分类id为1
-    categoriesId: id ? id : '1'
-  }
-  CategoriesPosts.value = await postsStore.getCategoriesOfPosts(getCategoriesOfPostsData)
-}
-
 onMounted(async () => {
   // 获取分类列表
   const getPostCategoriesData = {
@@ -81,7 +79,13 @@ onMounted(async () => {
     pageSize: '10'
   }
   await postsStore.getPostCategories(getPostCategoriesData)
-  await fetchCategoriesOfPosts()
+  // 获取分类动态列表
+  const getCategoriesOfPostsData = {
+    pageNum: '1',
+    pageSize: '10',
+    categoriesId: '1'
+  }
+  CategoriesPosts.value = await postsStore.getCategoriesOfPosts(getCategoriesOfPostsData)
 })
 
 defineOptions({
