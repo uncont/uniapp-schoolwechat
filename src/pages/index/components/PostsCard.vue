@@ -67,7 +67,7 @@ const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 // 跳转到帖子详情页
 function PushDetail() {
   uni.navigateTo({
-    url: '/pages/PostDetails/PostDetails'
+    url: `/pages/PostDetails/PostDetails?postsId=${props.posts.postsId}`
   })
 }
 defineOptions({

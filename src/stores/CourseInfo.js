@@ -5,6 +5,7 @@ import { ref } from 'vue'
 
 const userStore = useUserStore()
 const { userId } = storeToRefs(userStore)
+
 export const useCourseStore = defineStore('course', () => {
   const courseInfo = ref(uni.getStorageSync('courseInfo') || null)
 
