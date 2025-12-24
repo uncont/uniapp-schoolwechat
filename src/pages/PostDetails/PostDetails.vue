@@ -72,7 +72,6 @@
                   </view>
                 </view>
               </template>
-              <template #footer></template>
             </wd-card>
           </view>
         </view>
@@ -84,10 +83,9 @@
             <template #suffix>
               <view class="menu">
                 <wd-grid clickable>
-                  <wd-grid-item icon="picture" />
-                  <wd-grid-item icon="picture" />
-                  <wd-grid-item icon="picture" />
-                  <wd-grid-item icon="picture" />
+                  <wd-grid-item icon="spool" />
+                  <wd-grid-item icon="thumb-up" />
+                  <wd-grid-item icon="star" />
                 </wd-grid>
               </view>
             </template>
@@ -120,8 +118,8 @@ import { usePostsStore } from '../../stores/PostsInfo'
 const postsStore = usePostsStore()
 
 // 评论分段器
-const list = ref(['评论', '点赞', '贡献', '打赏'])
-const current = ref('点赞')
+const list = ref(['最新', '最热', '楼主'])
+const current = ref('最新')
 //动态信息
 const postsInfo = ref(null)
 const commentList = computed({
@@ -172,24 +170,6 @@ defineOptions({
   }
 }
 
-/* 底部搜索栏相关样式 */
-.bottom {
-  :deep(custom-search) {
-    width: 100%;
-  }
-  :deep(.wd-search__search-left-icon::before) {
-    content: '\e71e';
-  }
-}
-
-/* 菜单网格相关样式 */
-.menu {
-  width: 200px;
-  :deep(.wd-grid-item__text) {
-    margin: 0;
-  }
-}
-
 /* 评论卡片相关样式 */
 .comment-card {
   :deep(.custom-title) {
@@ -200,6 +180,7 @@ defineOptions({
   }
 }
 
+// 评论信息
 .comment-info {
   display: flex;
   align-items: flex-start;
@@ -212,6 +193,24 @@ defineOptions({
       align-items: center;
       padding-bottom: 6px;
     }
+  }
+}
+
+/* 底部发送栏相关样式 */
+.bottom {
+  :deep(custom-search) {
+    width: 100%;
+  }
+  :deep(.wd-search__search-left-icon::before) {
+    content: '\e71e';
+  }
+}
+
+/* 菜单网格相关样式 */
+.menu {
+  width: 160 px;
+  :deep(.wd-grid-item__text) {
+    margin: 0;
   }
 }
 </style>
