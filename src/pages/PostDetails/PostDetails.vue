@@ -140,7 +140,6 @@ onMounted(async () => {
     postsId: postsId.value
   }
   postsInfo.value = await postsStore.getPostsInfo(data)
-  console.log(commentList.value)
 })
 defineOptions({
   options: {

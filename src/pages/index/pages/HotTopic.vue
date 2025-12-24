@@ -28,16 +28,16 @@
       </wd-card>
     </view>
     <view class="tabs">
-      <wd-tabs v-model="tab" custom-class="topic-tab">
-        <block v-for="item in 9" :key="item">
-          <wd-tab :title="`标签${item}`" />
+      <wd-tabs v-model="tab" custom-class="topic-tab" @change="handleChange">
+        <block v-for="(value, index) in postsCategories" :key="index">
+          <wd-tab :title="value.name" />
         </block>
       </wd-tabs>
     </view>
     <view class="content">
       <ul>
-        <li v-for="item in 10" :key="item">
-          <PostsCard />
+        <li v-for="(value, index) in CategoriesPosts" :key="index">
+          <PostsCard :posts="value" />
         </li>
       </ul>
     </view>
@@ -45,17 +45,50 @@
   <wd-gap safe-area-bottom height="120rpx"></wd-gap>
 </template>
 <script setup>
+import PostsCard from '../components/PostsCard.vue'
+import { computed, onMounted, ref } from 'vue'
+import { usePostsStore } from '@/stores/PostsInfo'
+
+const postsStore = usePostsStore()
+
+// 分类列表
+const postsCategories = computed(() => postsStore.postsCategories)
+// 分类动态列表
+const CategoriesPosts = ref([])
+const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
+const tab = ref(0)
+//  切换分类
+async function handleChange(value) {
+  const categoriesId = postsCategories.value[value.index].categoriesId
+  await fetchCategoriesOfPosts(categoriesId)
+}
+// 获取分类动态列表
+async function fetchCategoriesOfPosts(id) {
+  // 获取分类动态列表
+  const getCategoriesOfPostsData = {
+    pageNum: '1',
+    pageSize: '10',
+    // 默认分类id为1
+    categoriesId: id ? id : '1'
+  }
+  CategoriesPosts.value = await postsStore.getCategoriesOfPosts(getCategoriesOfPostsData)
+}
+
+onMounted(async () => {
+  // 获取分类列表
+  const getPostCategoriesData = {
+    pageNum: '1',
+    pageSize: '10'
+  }
+  await postsStore.getPostCategories(getPostCategoriesData)
+  await fetchCategoriesOfPosts()
+})
+
 defineOptions({
   options: {
     styleIsolation: 'shared'
   }
 })
-
-import PostsCard from '../components/PostsCard.vue'
-import { ref } from 'vue'
-const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
-
-const tab = ref(0)
 </script>
 <style scoped lang="scss">
 // 热门话题卡片

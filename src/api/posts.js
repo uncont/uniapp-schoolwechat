@@ -13,13 +13,26 @@ export function getHomePostsList(data) {
   })
 }
 /**
- * 获取文章分类列表
+ * 获取动态分类列表
  * @param {*} data
  * @returns
  */
 export function getCategories(data) {
   return request({
     url: `/postsCategories/getCategories`,
+    method: 'GET',
+    needToken: true,
+    data: data
+  })
+}
+/**
+ * 获取分类下的动态
+ * @param {*} data
+ * @returns
+ */
+export function getClickCategoriesOfPosts(data) {
+  return request({
+    url: `/postsCategories/getClickCategoriesOfPosts`,
     method: 'GET',
     needToken: true,
     data: data

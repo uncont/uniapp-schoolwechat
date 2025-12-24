@@ -1,7 +1,13 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { getFollowPosts, getHomePostsList, getClickPosts, getCategories } from '@/api/posts'
+import {
+  getFollowPosts,
+  getHomePostsList,
+  getClickPosts,
+  getCategories,
+  getClickCategoriesOfPosts
+} from '@/api/posts'
 
 const userStore = useUserStore()
 const { userId } = storeToRefs(userStore)
@@ -31,7 +37,7 @@ export const usePostsStore = defineStore('posts', () => {
 
   /**
    * 获取动态分类列表
-   * @param {*} data
+   * @param {*} data 分页参数 {pageNum:'1', pageSize:'10'}
    * @returns
    */
   const getPostCategories = async data => {
@@ -42,6 +48,21 @@ export const usePostsStore = defineStore('posts', () => {
     const result = await getCategories(param)
     postsCategories.value = result
     return postsCategories.value
+  }
+  /**
+   * 获取用户点击的分类下的文章列表
+   * @param {*} data { pageNum:'1', pageSize:'10',categoriesId:'1',userId;'1' }
+   * @returns
+   */
+  const getCategoriesOfPosts = async data => {
+    const param = {
+      pageNum: data.pageNum,
+      pageSize: data.pageSize,
+      categoriesId: data.categoriesId,
+      userId: userId.value
+    }
+    const result = await getClickCategoriesOfPosts(param)
+    return result
   }
   /**
    *获取动态完整数据
@@ -82,6 +103,7 @@ export const usePostsStore = defineStore('posts', () => {
     getRecommendPost,
     getPostsInfo,
     postsCategories,
-    getPostCategories
+    getPostCategories,
+    getCategoriesOfPosts
   }
 })
