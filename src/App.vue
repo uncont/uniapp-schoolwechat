@@ -20,6 +20,7 @@ onHide(() => {
 })
 </script>
 <style lang="scss">
+@import '@/assets/iconfont/iconfont.css';
 .fixed-bg {
   position: fixed;
   top: 0;

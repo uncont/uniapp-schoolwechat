@@ -42,7 +42,7 @@
             </wd-col>
             <wd-col :span="10" :offset="4">
               <wd-segmented
-                custom-class="custom-segmented"
+                custom-class="custom-segregated"
                 :options="list"
                 v-model:value="current"
                 size="small"
@@ -83,9 +83,15 @@
             <template #suffix>
               <view class="menu">
                 <wd-grid clickable>
-                  <wd-grid-item icon="spool" />
-                  <wd-grid-item icon="thumb-up" />
-                  <wd-grid-item icon="star" />
+                  <wd-grid-item>
+                    <wd-icon name="message" class-prefix="iconfont" color="#0083ff" />
+                  </wd-grid-item>
+                  <wd-grid-item>
+                    <wd-icon name="good" class-prefix="iconfont" color="#0083ff" />
+                  </wd-grid-item>
+                  <wd-grid-item>
+                    <wd-icon name="star" class-prefix="iconfont" color="#0083ff" />
+                  </wd-grid-item>
                 </wd-grid>
               </view>
             </template>
@@ -111,7 +117,7 @@
 ,
 <script setup>
 import CustomNavbar from '@/components/CustomNavbar'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { usePostsStore } from '../../stores/PostsInfo'
 
@@ -208,7 +214,7 @@ defineOptions({
 
 /* 菜单网格相关样式 */
 .menu {
-  width: 160 px;
+  width: 160px;
   :deep(.wd-grid-item__text) {
     margin: 0;
   }

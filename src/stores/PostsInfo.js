@@ -28,7 +28,8 @@ export const usePostsStore = defineStore('posts', () => {
   const getRecommendPost = async data => {
     const params = {
       pageNum: data?.pageNum || '1',
-      pageSize: data?.pageSize || '10'
+      pageSize: data?.pageSize || '10',
+      userId: userId.value
     }
     const result = await getHomePostsList(params)
     recommendPostList.value = result

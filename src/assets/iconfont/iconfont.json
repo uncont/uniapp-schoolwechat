@@ -1,0 +1,44 @@
+{
+  "id": "4577004",
+  "name": "大作业",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "4765866",
+      "name": "message",
+      "font_class": "message",
+      "unicode": "e78a",
+      "unicode_decimal": 59274
+    },
+    {
+      "icon_id": "18406212",
+      "name": "good",
+      "font_class": "good",
+      "unicode": "e6f2",
+      "unicode_decimal": 59122
+    },
+    {
+      "icon_id": "18406228",
+      "name": "star",
+      "font_class": "star",
+      "unicode": "e6f4",
+      "unicode_decimal": 59124
+    },
+    {
+      "icon_id": "18752349",
+      "name": "fill_good",
+      "font_class": "fill_good",
+      "unicode": "e719",
+      "unicode_decimal": 59161
+    },
+    {
+      "icon_id": "18752385",
+      "name": "fill_star",
+      "font_class": "fill_star",
+      "unicode": "e71f",
+      "unicode_decimal": 59167
+    }
+  ]
+}
