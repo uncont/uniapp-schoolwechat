@@ -64,3 +64,16 @@ export function getClickPosts(data) {
     data: data
   })
 }
+/**
+ * 给动态点赞
+ * @param {*} data
+ * @returns
+ */
+export function setPostsLike(data) {
+  return request({
+    url: `/posts/setPostsLike`,
+    method: 'POST',
+    needToken: true,
+    data: data
+  })
+}

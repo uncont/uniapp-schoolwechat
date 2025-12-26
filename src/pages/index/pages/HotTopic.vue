@@ -37,7 +37,11 @@
     <view class="content">
       <ul>
         <li v-for="(value, index) in CategoriesPosts" :key="index">
-          <PostsCard :posts="value" />
+          <PostsCard
+            :posts="value"
+            @updateLikeStatus="handleUpdateLikeStatus"
+            @rollbackLikeStatus="handleRollbackLikeStatus"
+          />
         </li>
       </ul>
     </view>
@@ -57,6 +61,33 @@ const postsCategories = computed(() => postsStore.postsCategories)
 const CategoriesPosts = ref([])
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 const tab = ref(0)
+
+// 处理点赞状态更新
+function handleUpdateLikeStatus({ postsId, newLikeStatus, changeCount }) {
+  const postIndex = CategoriesPosts.value.findIndex(post => post.postsId === postsId)
+  if (postIndex !== -1) {
+    // 更新帖子的点赞状态
+    CategoriesPosts.value[postIndex].isLiked = newLikeStatus
+    // 更新点赞数
+    if (CategoriesPosts.value[postIndex].likeCount !== undefined) {
+      CategoriesPosts.value[postIndex].likeCount += changeCount
+    }
+  }
+}
+
+// 处理点赞状态回滚
+function handleRollbackLikeStatus({ postsId, originalLikeStatus, changeCount }) {
+  const postIndex = CategoriesPosts.value.findIndex(post => post.postsId === postsId)
+  if (postIndex !== -1) {
+    // 恢复帖子的点赞状态
+    CategoriesPosts.value[postIndex].isLiked = originalLikeStatus
+    // 恢复点赞数
+    if (CategoriesPosts.value[postIndex].likeCount !== undefined) {
+      CategoriesPosts.value[postIndex].likeCount += changeCount
+    }
+  }
+}
+
 //  切换分类
 async function handleChange(value) {
   const categoriesId = postsCategories.value[value.index].categoriesId

@@ -72,7 +72,11 @@
       <view class="posts">
         <ul>
           <li v-for="(posts, index) in postsList" :key="index">
-            <PostsCard :posts="posts"></PostsCard>
+            <PostsCard
+              :posts="posts"
+              @updateLikeStatus="handleUpdateLikeStatus"
+              @rollbackLikeStatus="handleRollbackLikeStatus"
+            ></PostsCard>
           </li>
         </ul>
       </view>
@@ -89,7 +93,33 @@ const postsStore = usePostsStore()
 const postsList = computed(() => {
   return postsStore.recommendPostList
 })
-//
+
+// 处理点赞状态更新
+function handleUpdateLikeStatus({ postsId, newLikeStatus, changeCount }) {
+  const postIndex = postsStore.recommendPostList.findIndex(post => post.postsId === postsId)
+  if (postIndex !== -1) {
+    // 更新帖子的点赞状态
+    postsStore.recommendPostList[postIndex].isLiked = newLikeStatus
+    // 更新点赞数
+    if (postsStore.recommendPostList[postIndex].likeCount !== undefined) {
+      postsStore.recommendPostList[postIndex].likeCount += changeCount
+    }
+  }
+}
+
+// 处理点赞状态回滚
+function handleRollbackLikeStatus({ postsId, originalLikeStatus, changeCount }) {
+  const postIndex = postsStore.recommendPostList.findIndex(post => post.postsId === postsId)
+  if (postIndex !== -1) {
+    // 恢复帖子的点赞状态
+    postsStore.recommendPostList[postIndex].isLiked = originalLikeStatus
+    // 恢复点赞数
+    if (postsStore.recommendPostList[postIndex].likeCount !== undefined) {
+      postsStore.recommendPostList[postIndex].likeCount += changeCount
+    }
+  }
+}
+
 onMounted(async () => {
   const params = {
     pageNum: '1',
