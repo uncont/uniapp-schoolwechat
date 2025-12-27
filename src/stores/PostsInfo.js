@@ -7,7 +7,9 @@ import {
   getClickPosts,
   getCategories,
   getClickCategoriesOfPosts,
-  setPostsLike
+  setPostsLike,
+  setComments,
+  setCommentsLike
 } from '@/api/posts'
 
 const userStore = useUserStore()
@@ -102,13 +104,39 @@ export const usePostsStore = defineStore('posts', () => {
    * @param {Object} data data:{postsId: '1',userId:'1'}
    */
   const PostsLike = async data => {
-    const params = {
+    const body = {
       postsId: data.postsId,
       userId: userId.value
     }
-    const result = await setPostsLike(params)
-    console.log(result)
+    await setPostsLike(body)
   }
+  /**
+   *发送评论
+   * @param {*} data {
+      content: data.content, 评论内容
+      postsId: data.postsId, 动态id
+      authorId: userId.value, 用户id
+      parentId: data.parentId 父级id 若不是回复别人评论则是0
+    }
+   */
+  const PostComments = async data => {
+    const body = {
+      content: data.content,
+      postsId: data.postsId,
+      authorId: userId.value,
+      parentId: data.parentId
+    }
+    await setComments(body)
+  }
+
+  const commentLike = async data => {
+    const body = {
+      commentsId: data.commentsId,
+      userId: userId.value
+    }
+    await setCommentsLike(body)
+  }
+
   return {
     FollowPostsList,
     fetchFollowPosts,
@@ -118,6 +146,8 @@ export const usePostsStore = defineStore('posts', () => {
     postsCategories,
     getPostCategories,
     getCategoriesOfPosts,
-    PostsLike
+    PostsLike,
+    PostComments,
+    commentLike
   }
 })

@@ -77,3 +77,31 @@ export function setPostsLike(data) {
     data: data
   })
 }
+
+/**
+ * 用户发表评论
+ * @param {*} data
+ * @returns
+ */
+export function setComments(data) {
+  return request({
+    url: '/comments/setComments',
+    method: 'POST',
+    data: data,
+    needToken: true
+  })
+}
+
+/**
+ * 给评论点赞
+ * @param {*} data
+ * @returns
+ */
+export function setCommentsLike(data) {
+  return request({
+    url: '/comments/setCommentsLike',
+    method: 'POST',
+    data: data,
+    needToken: true
+  })
+}

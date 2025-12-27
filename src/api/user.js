@@ -1,5 +1,9 @@
 import request from '@/utils/request'
 
+/**
+ * 用户使用微信登陆
+ * @returns
+ */
 export async function userLogin() {
   const loginRes = await uni.login({
     provider: 'weixin'
@@ -13,7 +17,11 @@ export async function userLogin() {
   })
 }
 
-// 从后端获取用户资料
+/**
+ * 获取用户信息
+ * @param {*} userId
+ * @returns
+ */
 export function fetchUserProfile(userId) {
   return request({
     url: `/users/getUserInfo/${userId}`,
