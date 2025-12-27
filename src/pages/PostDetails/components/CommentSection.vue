@@ -31,11 +31,7 @@
     <view class="comment">
       <view class="comment-card" v-for="(comment, index) in sortedCommentList" :key="index">
         <!-- 评论卡片 -->
-        <wd-card
-          type="rectangle"
-          custom-class="custom-card"
-          custom-content-class="custom-content"
-        >
+        <wd-card type="rectangle" custom-class="custom-card" custom-content-class="custom-content">
           <template #default>
             <!-- 评论信息 -->
             <view class="comment-info">
@@ -75,7 +71,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { sortComments, formatCommentTime } from '../../../utils/comments'
 
 // 定义组件接收的props

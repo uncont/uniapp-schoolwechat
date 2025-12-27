@@ -1,4 +1,13 @@
 import request from '@/utils/request'
+
+export function addPost(data) {
+  return request({
+    url: `/posts/add`,
+    method: 'POST',
+    needToken: true,
+    data: data
+  })
+}
 /**
  * 获取首页推荐动态
  * @param {*} data

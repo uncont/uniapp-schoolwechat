@@ -2,6 +2,7 @@ import { defineStore, storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import {
+  addPost,
   getFollowPosts,
   getHomePostsList,
   getClickPosts,
@@ -23,6 +24,24 @@ export const usePostsStore = defineStore('posts', () => {
   // 动态分类列表
   const postsCategories = ref([])
 
+  /**
+   * 
+   * @param {*} data {
+      title: '标题', 动态标题
+      content: '帖子内容',文本内容
+      categoryId: 1,分类id
+      coverImage: '' 图片内容
+    }
+   */
+  const releasePost = async data => {
+    const body = {
+      title: data.title,
+      content: data.content,
+      categoryId: data.categoryId,
+      coverImage: data.coverImage
+    }
+    await addPost(body)
+  }
   /**
    * 获取推荐动态
    * @param {Object} data 分页参数 {pageNum:'1', pageSize:'10'}
@@ -138,6 +157,7 @@ export const usePostsStore = defineStore('posts', () => {
   }
 
   return {
+    releasePost,
     FollowPostsList,
     fetchFollowPosts,
     recommendPostList,
