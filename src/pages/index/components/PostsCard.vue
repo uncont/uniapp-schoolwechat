@@ -93,18 +93,23 @@ const props = defineProps({
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 
 // 点赞相关状态
-const isLiked = computed(() => props.posts?.isLiked || false)
+const isLiked = ref(false)
+isLiked.value = props.posts.isLike
 
 // 计算点赞图标名称
 const likeIconName = computed(() => (isLiked.value ? 'fill_good' : 'good'))
 
 // 计算点赞显示数量
 const likeCountDisplay = computed(() => {
-  if (props.posts.likeCount === undefined) return ''
+  if (!props.posts) return 0
   let count = props.posts.likeCount
-  if (isLiked.value !== props.posts.isLiked) {
-    // 如果本地状态与props状态不一致，说明正在乐观更新，需要调整计数
-    count = isLiked.value ? count - 1 : count + 1
+  // 否则保持原始likeCount
+  if (isLiked.value && !props.posts.isLiked) {
+    // 从没点赞变为点赞，数量加1
+    count = props.posts.likeCount + 1
+  } else if (!isLiked.value && props.posts.isLiked) {
+    // 从点赞变为没点赞，数量减1
+    count = props.posts.likeCount - 1
   }
   return count
 })
@@ -116,41 +121,45 @@ function PushDetail() {
   })
 }
 
-//给动态点赞
+// 添加节流功能的点赞函数 - 只在最终状态与初始状态不同时才发送请求
+let throttleTimer = null
+let initialStatus = props.posts.isLike // 记录初始状态
+const THROTTLE_DELAY = 500 // 500ms节流延迟
+
 async function setPostsLike() {
-  if (!props.posts) return
+  // 立即切换图标和本地状态（乐观更新）
+  isLiked.value = !isLiked.value
+  console.log(isLiked.value)
 
-  const data = {
-    postsId: props.posts.postsId
+  // 清除之前的定时器
+  if (throttleTimer) {
+    clearTimeout(throttleTimer)
   }
 
-  // 本地先更新状态（乐观更新）
-  const previousLikeStatus = props.posts.isLiked
-  // 通过emit事件通知父组件更新状态
-  emit('updateLikeStatus', {
-    postsId: props.posts.postsId,
-    newLikeStatus: !previousLikeStatus, // 新的点赞状态
-    changeCount: previousLikeStatus ? -1 : 1 // 点赞数变化
-  })
-
-  try {
-    await postsStore.PostsLike(data)
-    // 如果后端请求成功，保持当前状态
-  } catch (error) {
-    console.error('点赞失败:', error)
-    // 使用wot-ui的轻提示
-    showErrorToast('点赞失败，请重试')
-    // 请求失败时，通知父组件回滚状态
-    emit('rollbackLikeStatus', {
-      postsId: props.posts.postsId,
-      originalLikeStatus: previousLikeStatus, // 原始的点赞状态
-      changeCount: previousLikeStatus ? 1 : -1 // 回滚时的计数变化
-    })
-  }
+  // 设置新的定时器，延迟执行请求
+  throttleTimer = setTimeout(async () => {
+    if (!props.posts) return
+    
+    // 只有当最终状态与初始状态不同时才发送请求
+    if (isLiked.value !== initialStatus) {
+      const data = {
+        postsId: props.posts.postsId
+      }
+      try {
+        await postsStore.PostsLike(data)
+        // 更新初始状态为当前状态
+        initialStatus = isLiked.value
+      } catch (error) {
+        // 请求失败时回滚状态
+        isLiked.value = initialStatus
+        showErrorToast('点赞失败，请重试')
+      }
+    }
+    
+    // 执行完后清除定时器
+    throttleTimer = null
+  }, THROTTLE_DELAY)
 }
-
-// 定义emit
-const emit = defineEmits(['updateLikeStatus', 'rollbackLikeStatus'])
 
 defineOptions({
   options: {

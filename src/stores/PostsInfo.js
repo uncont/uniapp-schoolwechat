@@ -25,7 +25,7 @@ export const usePostsStore = defineStore('posts', () => {
   const postsCategories = ref([])
 
   /**
-   * 
+   * 发布动态
    * @param {*} data {
       title: '标题', 动态标题
       content: '帖子内容',文本内容
@@ -53,6 +53,8 @@ export const usePostsStore = defineStore('posts', () => {
       pageSize: data?.pageSize || '10',
       userId: userId.value
     }
+    console.log(userId.value)
+
     const result = await getHomePostsList(params)
     recommendPostList.value = result
     return recommendPostList.value

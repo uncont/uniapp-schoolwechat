@@ -1,5 +1,9 @@
 import request from '@/utils/request'
-
+/**
+ * 发布动态
+ * @param {*} data
+ * @returns
+ */
 export function addPost(data) {
   return request({
     url: `/posts/add`,
