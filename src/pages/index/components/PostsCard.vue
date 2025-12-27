@@ -129,7 +129,6 @@ const THROTTLE_DELAY = 500 // 500ms节流延迟
 async function setPostsLike() {
   // 立即切换图标和本地状态（乐观更新）
   isLiked.value = !isLiked.value
-  console.log(isLiked.value)
 
   // 清除之前的定时器
   if (throttleTimer) {
@@ -139,7 +138,7 @@ async function setPostsLike() {
   // 设置新的定时器，延迟执行请求
   throttleTimer = setTimeout(async () => {
     if (!props.posts) return
-    
+
     // 只有当最终状态与初始状态不同时才发送请求
     if (isLiked.value !== initialStatus) {
       const data = {
@@ -155,7 +154,7 @@ async function setPostsLike() {
         showErrorToast('点赞失败，请重试')
       }
     }
-    
+
     // 执行完后清除定时器
     throttleTimer = null
   }, THROTTLE_DELAY)
