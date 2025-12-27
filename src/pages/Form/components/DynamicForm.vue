@@ -60,17 +60,24 @@ const form = ref()
 function beforeUpload(fileObj) {
   // 检查是否有文件数据
   if (fileObj && fileObj.files && fileObj.files.length > 0) {
+    // 检查是否超过限制数量
+    if(content.image.length + fileObj.files.length > 9) {
+      showWarning(`最多只能选择9张图片，当前已选择${content.image.length}张，本次添加${fileObj.files.length}张会超出限制`)
+      return false
+    }
+
     // 手动将文件添加到 content.image 数组中
     const newFiles = fileObj.files.map(file => ({
       uid: Date.now() + Math.random(), // 生成唯一ID
-      name: file.path.split('/').pop(), // 从路径中提取文件名
-      status: 'ready', // 状态设置为准备上传
-      url: file.path,
-      thumb: file.thumb // 保留thumb属性用于预览
+      name: file.path ? file.path.split('/').pop() : `image_${Date.now()}.jpg`, // 从路径中提取文件名
+      status: 'success', // 状态设置为成功，这样可以显示预览
+      url: file.path || file.url, // 优先使用path作为预览路径
+      thumb: file.thumb || file.path // 保留thumb属性用于预览，优先级：thumb > path
     }))
 
     // 添加到现有的文件列表中
     content.image = [...content.image, ...newFiles]
+    showSuccess(`已添加${newFiles.length}张图片`)
   }
 
   // 返回false阻止自动上传
@@ -87,6 +94,12 @@ function handleUploadError(error, file) {
 async function handleSubmit() {
   if (isSubmitting.value) return
 
+  // 检查文本是否为空
+  if (!content.text.trim()) {
+    showWarning('请先输入动态内容')
+    return
+  }
+
   const validateResult = await form.value.validate().catch(error => {
     console.log(error, 'error')
     return { valid: false }
@@ -101,6 +114,7 @@ async function handleSubmit() {
       // 如果有图片需要上传，则先上传图片
       let uploadedImageUrls = []
       if (content.image && content.image.length > 0) {
+        showLoading(`正在上传${content.image.length}张图片...`)
         // 过滤出本地文件（未上传的文件status为'ready'或undefined或临时路径）
         const localFiles = content.image.filter(
           file =>
@@ -154,7 +168,7 @@ async function handleSubmit() {
       content.image = []
     } catch (error) {
       console.error('提交失败:', error)
-      showWarning('提交失败')
+      showWarning('提交失败，请稍后重试')
     } finally {
       closeToast()
       isSubmitting.value = false
