@@ -1,0 +1,116 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "index",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Mine/MineIndex",
+      "style": {
+        "navigationBarTitleText": "MineIndex",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/PostDetails/PostDetails",
+      "style": {
+        "navigationBarTitleText": "PostDetails",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Schedule/ScheduleInfo",
+      "style": {
+        "navigationBarTitleText": "ScheduleInfo",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Schedule/AllCourseInfo",
+      "style": {
+        "navigationBarTitleText": "AllCourseInfo",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Schedule/RefreshCourseInfo",
+      "style": {
+        "navigationBarTitleText": "RefreshCourseInfo",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/SecondHand/SecondHandMarket",
+      "style": {
+        "navigationBarTitleText": "SecondHandMarket",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/SecondHand/GoodsDetails",
+      "style": {
+        "navigationBarTitleText": "GoodsDetails",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Rent/RentMarket",
+      "style": {
+        "navigationBarTitleText": "RentMarket",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Rent/RentDetails",
+      "style": {
+        "navigationBarTitleText": "RentDetails",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Form/PostsForm",
+      "style": {
+        "navigationBarTitleText": "PostsForm",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Message/MessageList",
+      "style": {
+        "navigationBarTitleText": "MessageList",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Message/page/MessageInfo",
+      "style": {
+        "navigationBarTitleText": "MessageInfo",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "tabBar": {
+    "custom": true,
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/Form/PostsForm", "text": "发布" },
+      { "pagePath": "pages/Mine/MineIndex", "text": "我的" },
+      { "pagePath": "pages/Message/MessageList", "text": "消息" }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  }
+}
