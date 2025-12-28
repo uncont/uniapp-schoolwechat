@@ -1,5 +1,13 @@
 <script setup>
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
+import websocket from './utils/websocket'
+import { useUserStore } from './stores/user'
+
+// 获取用户信息
+const userStore = useUserStore()
+
+// 用户Id
+const userId = userStore?.userId || 0
 
 // 配置选项
 const options = {
@@ -13,6 +21,11 @@ onLaunch(() => {
 
 onShow(() => {
   console.log('App Show')
+  // 延迟启动 WebSocket，确保 store 已初始化
+  setTimeout(() => {
+    const userId = userStore?.userId || 0
+    websocket.initWebSocket(userId)
+  }, 1000) // 延迟1000ms启动
 })
 
 onHide(() => {

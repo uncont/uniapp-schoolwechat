@@ -53,7 +53,6 @@ export const usePostsStore = defineStore('posts', () => {
       pageSize: data?.pageSize || '10',
       userId: userId.value
     }
-    console.log(userId.value)
 
     const result = await getHomePostsList(params)
     recommendPostList.value = result

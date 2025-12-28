@@ -1,141 +1,198 @@
 <template>
   <view class="chat-page">
     <!-- 顶部导航栏 -->
-    <view class="navbar-wrapper">
-      <wd-navbar
-        custom-class="custom-nav"
-        fixed
-        :bordered="false"
-        placeholder
-        safeAreaInsetTop
-        left-arrow
-        @click-left="handleBack"
-      >
-        <template #title>
+    <view class="navbar">
+      <CustomNavbar>
+        <template>
           <view class="title">
-            <wd-text :text="chatTitle" color="#000" />
+            <wd-text :text="friendData.friendName" color="#000" />
           </view>
         </template>
-      </wd-navbar>
+      </CustomNavbar>
     </view>
 
-    <!-- 聊天内容 -->
-    <scroll-view
-      class="chat-scroll"
-      scroll-y
-      :scroll-into-view="lastMessageId"
-      :scroll-with-animation="true"
-    >
-      <view class="time-tip">
-        <wd-text text="下午7:30" color="#999" />
-      </view>
-
-      <view
-        v-for="item in messages"
-        :key="item.id"
-        :id="item.id"
-        class="message-row"
-        :class="item.isSelf ? 'self' : 'other'"
+    <!-- 聊天内容区域 -->
+    <view class="chat-content">
+      <scroll-view
+        class="chat-scroll"
+        scroll-y
+        :scroll-into-view="lastMessageId"
+        :scroll-with-animation="false"
       >
-        <!-- 对方头像 -->
-        <view v-if="!item.isSelf" class="avatar">
-          <wd-img :width="40" :height="40" round :src="friendAvatar" />
-        </view>
+        <view v-for="(group, groupIndex) in messageGroups" :key="group.time" class="message-group">
+          <!-- 时间提示条 -->
+          <view v-if="group.showTimeTip" class="time-tip">
+            <wd-text :text="formatCommentTime(group.time)" color="#999" size="12px" />
+          </view>
 
-        <!-- 气泡 -->
-        <view class="bubble-wrapper">
-          <view class="bubble" :class="item.isSelf ? 'bubble-self' : 'bubble-other'">
-            <text class="bubble-text">{{ item.content }}</text>
+          <!-- 消息列表 -->
+          <view
+            v-for="(value, index) in group.messages"
+            :key="`${groupIndex}-${index}`"
+            :id="`msg-${value.privateMessageId || index}`"
+            class="message-row"
+            :class="value.senderId === Number(userInfo.userId) ? 'self' : 'other'"
+          >
+            <!-- 对方头像 -->
+            <view v-if="value.senderId === Number(friendData.friendId)" class="avatar">
+              <wd-img :width="40" :height="40" round :src="friendData.avatar" />
+            </view>
+
+            <!-- 气泡 -->
+            <view class="bubble-wrapper">
+              <view
+                class="bubble"
+                :class="value.senderId === Number(userInfo.userId) ? 'bubble-self' : 'bubble-other'"
+              >
+                <text class="bubble-text">{{ value.content }}</text>
+              </view>
+            </view>
+
+            <!-- 自己头像 -->
+            <view class="avatar" v-if="value.senderId === Number(userInfo.userId)">
+              <wd-img :width="40" :height="40" round :src="userInfo.avatar" />
+            </view>
           </view>
         </view>
-
-        <!-- 自己头像 -->
-        <view v-if="item.isSelf" class="avatar">
-          <wd-img :width="40" :height="40" round :src="selfAvatar" />
-        </view>
-      </view>
-
-      <!-- 预留底部安全区，避免被输入框遮挡 -->
-      <wd-gap safe-area-bottom height="120" />
-    </scroll-view>
+        <wd-gap bg-color="#f5f5f5" height="20px"></wd-gap>
+      </scroll-view>
+    </view>
 
     <!-- 底部输入区 -->
-    <view class="input-bar" :style="{ paddingBottom: safeBottom + 'px' }">
-      <view class="input-inner">
-        <wd-input
-          v-model="newMessage"
+    <view class="input-bar">
+      <wd-tabbar fixed bordered safeAreaInsetBottom placeholder>
+        <wd-search
+          placeholder-left
           placeholder="发送消息..."
-          clearable
-          :border="false"
-          confirm-type="send"
-          @confirm="handleSend"
-        />
-      </view>
-      <wd-button
-        type="success"
-        size="small"
-        custom-class="send-btn"
-        :disabled="!newMessage.trim()"
-        @click="handleSend"
-      >
-        发送
-      </wd-button>
+          custom-class="custom-search"
+          v-model="newMessage"
+        >
+          <template #suffix>
+            <view class="menu">
+              <wd-grid clickable>
+                <!-- 发送消息 -->
+                <wd-grid-item @itemclick="handleSend" :disabled="isSendDisabled">
+                  <wd-icon
+                    name="message"
+                    class-prefix="iconfont"
+                    :color="isSendDisabled ? '#999999' : '#0083ff'"
+                  />
+                </wd-grid-item>
+              </wd-grid>
+            </view>
+          </template>
+        </wd-search>
+      </wd-tabbar>
     </view>
   </view>
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import CustomNavbar from '@/components/CustomNavbar'
+import { computed, ref, onMounted, nextTick, watch } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { useMessageStore } from '@/stores/Message'
+import { formatCommentTime } from '@/utils/comments.js'
+import { useUserStore } from '@/stores/user'
 
-// 模拟头像
-const friendAvatar = ref(
-  'https://ts1.tc.mm.bing.net/th/id/OIP-C.SWWmUtJk_k7PS8U6DyrxQQAAAA?w=211&h=211&c=8&rs=1&qlt=90&o=6&cb=ucfimg1&dpr=1.3&pid=3.1&rm=2&ucfimg=1'
-)
-const selfAvatar = ref(
-  'https://ts1.tc.mm.bing.net/th/id/OIP-C.z8hLJ-r4jBsa1dYRotjnYgAAAA?w=205&h=211&c=8&rs=1&qlt=90&o=6&cb=ucfimg1&dpr=1.3&pid=3.1&rm=2&ucfimg=1'
-)
+// 获取用户信息
+const { userInfo } = useUserStore()
 
-// 聊天标题（可以根据路由参数动态传入）
-const chatTitle = ref('小明')
+// 页面加载时获取路由参数
+onLoad(options => {
+  friendData.value.friendId = options.followingId //好友id
+  friendData.value.friendName = options.friendName || '好友' // 好友名称
+  friendData.value.avatar = uni.getStorageSync('followingAvatar')
+  uni.removeStorageSync('tempMessage')
+})
 
-// 聊天记录
-const messages = reactive([
-  {
-    id: 'msg-1',
-    isSelf: false,
-    content: '你好！今天晚上有空一起吃饭吗？'
-  },
-  {
-    id: 'msg-2',
-    isSelf: true,
-    content: '可以啊，几点见？'
-  }
-])
+// 启动聊天记录
+const messageStore = useMessageStore()
 
+// 按时间分组的消息，直接从store获取
+const messageGroups = computed(() => messageStore.messageGroups)
+
+// 聊天对象信息
+const friendData = ref({
+  // 聊天对象id
+  friendId: '',
+  friendName: '好友',
+  avatar: ''
+})
+
+// 滚动到最新消息的ID
+const lastMessageId = ref('')
+
+// 发送信息
 const newMessage = ref('')
 
-// 让滚动视图始终滚到底部
-const lastMessageId = computed(() => (messages.length ? messages[messages.length - 1].id : ''))
-
-// 底部安全距离（微信小程序里可以用 getSystemInfo 获取，这里简单写死一个）
-const safeBottom = ref(10)
-
+// 返回按钮点击处理
 const handleBack = () => {
   uni.navigateBack()
 }
 
-const handleSend = () => {
+const isSendDisabled = computed(() => !newMessage.value.trim())
+
+function handleSend() {
   const text = newMessage.value.trim()
-  if (!text) return
+  if (!text) return // 防止空消息发送
 
-  messages.push({
-    id: `msg-${Date.now()}`,
-    isSelf: true,
-    content: text
-  })
+  const data = {
+    content: text,
+    receiverId: friendData.value.friendId
+  }
+  try {
+    console.log('hello')
 
-  newMessage.value = ''
+    // messageStore.sendPrivateMessage(data)
+    newMessage.value = ''
+    // 发送消息后滚动到底部
+    setTimeout(() => {
+      scrollToBottom()
+    }, 100)
+  } catch (e) {
+    uni.showToast({
+      title: '发送消息失败',
+      icon: 'error',
+      duration: 2000
+    })
+    console.error('发送消息异常:', e)
+  }
 }
+
+// 更新滚动到最新消息的函数
+const scrollToBottom = async () => {
+  if (messageStore.chatHistoryList.length > 0) {
+    const lastMsg = messageStore.chatHistoryList[messageStore.chatHistoryList.length - 1]
+    lastMessageId.value = `msg-${lastMsg.privateMessageId || messageStore.chatHistoryList.length - 1}`
+    await nextTick()
+  }
+}
+
+// 监听聊天历史列表的变化，当有新消息时自动滚动到底部
+watch(
+  () => messageStore.chatHistoryList.length,
+  (newLength, oldLength) => {
+    // 只有在消息数量增加时才滚动到底部
+    if (newLength > oldLength) {
+      // 延迟执行滚动，确保DOM已更新
+      nextTick(() => {
+        scrollToBottom()
+      })
+    }
+  }
+)
+
+// 在组件挂载前执行
+onMounted(async () => {
+  // 获取聊天记录
+  await messageStore.fetchChatHistoryList(friendData.value.friendId)
+
+  // 等待DOM更新后滚动到底部
+  setTimeout(() => {
+    scrollToBottom()
+  }, 100)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -150,16 +207,34 @@ const handleSend = () => {
   background-color: #ededed;
 }
 
+.chat-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .chat-scroll {
   flex: 1;
   padding: 20rpx 24rpx 0;
   box-sizing: border-box;
+  height: 100%;
+  /* 隐藏滚动条 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .time-tip {
   text-align: center;
-  margin-bottom: 24rpx;
+  margin: 24rpx 0;
   font-size: 24rpx;
+}
+
+.message-group {
+  margin-bottom: 10rpx;
 }
 
 .message-row {
@@ -209,34 +284,23 @@ const handleSend = () => {
   color: #111;
 }
 
+/* 底部发送栏相关样式 */
 .input-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  padding: 8rpx 16rpx;
-  background-color: #f7f7f7;
-  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.06);
-  box-sizing: border-box;
-}
-
-.input-inner {
-  flex: 1;
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 0 20rpx;
-  display: flex;
-  align-items: center;
-  margin-right: 12rpx;
-
-  :deep(.wd-input) {
+  :deep(.custom-search) {
+    padding: 0;
     width: 100%;
+  }
+
+  :deep(.wd-search__search-left-icon::before) {
+    content: '\e71e';
   }
 }
 
-.send-btn {
-  min-width: 120rpx;
+/* 菜单网格相关样式 */
+.menu {
+  width: 40px;
+  :deep(.wd-grid-item__text) {
+    margin: 0;
+  }
 }
 </style>
