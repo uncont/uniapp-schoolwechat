@@ -37,7 +37,7 @@
     <view class="content">
       <ul>
         <li v-for="(value, index) in CategoriesPosts" :key="index">
-          <PostsCard :posts="value" />
+          <PostsCard :posts="value" @updateLikeStatus="updatePostLikeStatus"/>
         </li>
       </ul>
     </view>
@@ -57,6 +57,16 @@ const postsCategories = computed(() => postsStore.postsCategories)
 const CategoriesPosts = ref([])
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 const tab = ref(0)
+
+// 处理点赞状态更新
+function updatePostLikeStatus({ postsId, isLike, likeCount }) {
+  // 找到对应的帖子并更新其点赞状态和数量
+  const postIndex = CategoriesPosts.value.findIndex(post => post.postsId === postsId);
+  if (postIndex !== -1) {
+    CategoriesPosts.value[postIndex].isLike = isLike;
+    CategoriesPosts.value[postIndex].likeCount = likeCount;
+  }
+}
 
 //  切换分类
 async function handleChange(value) {

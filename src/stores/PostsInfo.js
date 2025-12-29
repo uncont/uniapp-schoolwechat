@@ -13,10 +13,10 @@ import {
   setCommentsLike
 } from '@/api/posts'
 
-const userStore = useUserStore()
-const { userId } = storeToRefs(userStore)
-
 export const usePostsStore = defineStore('posts', () => {
+  const userStore = useUserStore()
+  const { userId } = storeToRefs(userStore)
+
   // 首页推荐动态列表
   const recommendPostList = ref([])
   // 关注动态列表

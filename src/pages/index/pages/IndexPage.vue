@@ -72,7 +72,7 @@
       <view class="posts">
         <ul>
           <li v-for="(posts, index) in postsList" :key="index">
-            <PostsCard :posts="posts"></PostsCard>
+            <PostsCard :posts="posts" @updateLikeStatus="updatePostLikeStatus"></PostsCard>
           </li>
         </ul>
       </view>
@@ -89,6 +89,16 @@ const postsStore = usePostsStore()
 const postsList = computed(() => {
   return postsStore.recommendPostList
 })
+
+// 处理点赞状态更新
+function updatePostLikeStatus({ postsId, isLike, likeCount }) {
+  // 找到对应的帖子并更新其点赞状态和数量
+  const postIndex = postsStore.recommendPostList.findIndex(post => post.postsId === postsId);
+  if (postIndex !== -1) {
+    postsStore.recommendPostList[postIndex].isLike = isLike;
+    postsStore.recommendPostList[postIndex].likeCount = likeCount;
+  }
+}
 
 onMounted(async () => {
   const params = {

@@ -5,6 +5,9 @@ import { useUserStore } from './user'
 import websocket from '@/utils/websocket'
 
 export const useMessageStore = defineStore('message', () => {
+  const userStore = useUserStore()
+  const { userId } = storeToRefs(userStore)
+
   // 私信用户列表
   const messageList = ref([])
   // 聊天记录列表
@@ -38,7 +41,9 @@ export const useMessageStore = defineStore('message', () => {
       const prevMessage = sortedMessages[i - 1]
       const currentMessage = sortedMessages[i]
 
-      const prevTime = prevMessage.sendTime ? new Date(prevMessage.sendTime.replace(/-/g, '/')).getTime() : Date.now()
+      const prevTime = prevMessage.sendTime
+        ? new Date(prevMessage.sendTime.replace(/-/g, '/')).getTime()
+        : Date.now()
       const currentTime = currentMessage.sendTime
         ? new Date(currentMessage.sendTime.replace(/-/g, '/')).getTime()
         : Date.now()
@@ -69,8 +74,6 @@ export const useMessageStore = defineStore('message', () => {
    * @returns
    */
   const fetchMessageList = async () => {
-    const userStore = useUserStore()
-    const { userId } = storeToRefs(userStore)
     const params = {
       userId: userId.value
     }
@@ -84,8 +87,6 @@ export const useMessageStore = defineStore('message', () => {
    * @param followingId
    */
   const fetchChatHistoryList = async followingId => {
-    const userStore = useUserStore()
-    const { userId } = storeToRefs(userStore)
     const params = {
       pageNum: 1,
       pageSize: 10,
@@ -97,9 +98,9 @@ export const useMessageStore = defineStore('message', () => {
     // 按sendTime字段排序，确保最新消息在最后
     // 修复iOS兼容性问题：将日期字符串格式转换为iOS支持的格式
     chatHistoryList.value = response.sort((a, b) => {
-      const dateA = new Date(a.sendTime.replace(/-/g, '/'));
-      const dateB = new Date(b.sendTime.replace(/-/g, '/'));
-      return dateA.getTime() - dateB.getTime();
+      const dateA = new Date(a.sendTime.replace(/-/g, '/'))
+      const dateB = new Date(b.sendTime.replace(/-/g, '/'))
+      return dateA.getTime() - dateB.getTime()
     })
     return chatHistoryList.value
   }
@@ -108,8 +109,6 @@ export const useMessageStore = defineStore('message', () => {
    * 获取总未读信息数
    */
   const fetchTotalUnreadCount = async () => {
-    const userStore = useUserStore()
-    const { userId } = storeToRefs(userStore)
     const params = {
       userId: userId.value
     }
@@ -131,8 +130,6 @@ export const useMessageStore = defineStore('message', () => {
    * @param {string} data.receiverId - 接收者ID
    */
   const sendPrivateMessage = async data => {
-    const userStore = useUserStore()
-    const { userId } = storeToRefs(userStore)
     try {
       let message = {
         type: 'text',
@@ -147,9 +144,9 @@ export const useMessageStore = defineStore('message', () => {
       chatHistoryList.value.push(message)
       // 重新排序以确保消息按时间顺序 - 修复iOS兼容性问题
       chatHistoryList.value.sort((a, b) => {
-        const dateA = new Date(a.sendTime.replace(/-/g, '/'));
-        const dateB = new Date(b.sendTime.replace(/-/g, '/'));
-        return dateA.getTime() - dateB.getTime();
+        const dateA = new Date(a.sendTime.replace(/-/g, '/'))
+        const dateB = new Date(b.sendTime.replace(/-/g, '/'))
+        return dateA.getTime() - dateB.getTime()
       })
       await websocket.sendPrivateMessage(message)
 

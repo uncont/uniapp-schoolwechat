@@ -30,7 +30,7 @@
       <!-- 评论区组件 -->
       <CommentSection
         :postsInfo="postsInfo"
-        :commentList="postsInfo.commentList || []"
+        :commentList="commentList"
         @commentLike="setCommentLike"
       />
       <!-- 底部回复框组件 -->
@@ -49,9 +49,9 @@ import CommentSection from './components/CommentSection.vue'
 import BottomReply from './components/BottomReply.vue'
 import { computed, onMounted, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import { usePostsStore } from '../../stores/PostsInfo'
+import { usePostsStore } from '@/stores/PostsInfo'
 import { useToast } from 'wot-design-uni'
-
+import { debounceLike, calculateLikeCount } from '@/utils/like'
 // 获取toast实例
 const { error: showErrorToast } = useToast()
 
@@ -61,16 +61,20 @@ const postsStore = usePostsStore()
 //动态信息
 const postsInfo = ref(null)
 
+// 评论列表
+const commentList = ref([])
+
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 // 查询参数
 const postsId = ref()
 
-// 点赞相关状态
-const isLiked = computed(() => postsInfo.value?.isLiked || false)
+// 动态点赞相关状态
+const isLiked = ref(false)
 
 // 评论内容
 const commentContent = ref('')
 
+// 接受帖子id
 onLoad(options => {
   postsId.value = options.postsId
 })
@@ -81,59 +85,64 @@ onMounted(async () => {
     postsId: postsId.value
   }
   postsInfo.value = await postsStore.getPostsInfo(data)
+  isLiked.value = postsInfo.value.isLike
+  // 获取评论列表并添加控制器
+  commentList.value = postsInfo.value.commentList.map(comment => {
+    return {
+      ...comment,
+      isLikeController: comment.isLike
+    }
+  })
 })
 
 //给动态点赞
 async function setPostsLike() {
-  if (!postsInfo.value) return
-
-  const data = {
-    postsId: postsId.value
-  }
-
-  // 本地先更新状态（乐观更新）
-  const previousLikeStatus = postsInfo.value.isLiked
-  postsInfo.value.isLiked = !previousLikeStatus
-
+  const initialStatus = postsInfo.value.isLike
+  isLiked.value = !isLiked.value
+  const previousLikeCount = postsInfo.value.likeCount
   try {
-    await postsStore.PostsLike(data)
-    // 如果后端返回成功，保持当前状态
-    // 更新点赞计数（如果后端有返回点赞数的话）
-    if (postsInfo.value.likeCount !== undefined) {
-      postsInfo.value.likeCount = previousLikeStatus
-        ? postsInfo.value.likeCount - 1
-        : postsInfo.value.likeCount + 1
-    }
+    await debounceLike(
+      postsStore.PostsLike, // API调用函数
+      { postsId: postsInfo.value.postsId }, // API参数
+      initialStatus, // 初始状态
+      () => isLiked.value, // 更新本地状态的函数
+      error => {
+        isLiked.value = initialStatus
+        showErrorToast('点赞失败，请重试')
+      },
+      500, // 防抖延迟时间
+      `posts_like_${postsInfo.value.postsId}`, // 使用帖子ID作为定时器唯一标识
+      // 成功回调：更新 postsInfo 中的 isLike 状态和点赞数
+      () => {
+        postsInfo.value.isLike = isLiked.value
+        postsInfo.value.likeCount = isLiked.value 
+          ? previousLikeCount + 1 
+          : previousLikeCount - 1
+      }
+    )
   } catch (error) {
-    // 如果后端返回失败，恢复到之前的状态
-    postsInfo.value.isLiked = previousLikeStatus
-    console.error('点赞失败:', error)
-    // 使用wot-ui的轻提示
     showErrorToast('点赞失败，请重试')
   }
 }
 
 // 给评论点赞
 async function setCommentLike(comment) {
-  if (!comment) return
-
-  // 保存原始状态，用于回滚
-  const previousLikeStatus = comment.isLiked
-  const previousLikeCount = comment.likeCount || 0
-
-  // 本地先更新状态（乐观更新）
-  comment.isLiked = !previousLikeStatus
-  comment.likeCount = previousLikeStatus ? previousLikeCount - 1 : previousLikeCount + 1
-
+  const initialStatus = comment.isLike
+  comment.isLikeController = !comment.isLikeController
   try {
-    await postsStore.commentLike({ commentsId: comment.commentsId })
-    // 如果后端返回成功，保持当前状态
+    await debounceLike(
+      postsStore.commentLike, // API调用函数
+      { commentsId: comment.commentsId }, // API参数
+      initialStatus, // 初始状态
+      () => comment.isLikeController, // 更新本地状态的函数
+      error => {
+        comment.isLikeController = initialStatus
+        showErrorToast('点赞失败，请重试')
+      },
+      500, // 防抖延迟时间
+      `posts_like_${comment.commentsId}`
+    )
   } catch (error) {
-    // 如果后端返回失败，恢复到之前的状态
-    comment.isLiked = previousLikeStatus
-    comment.likeCount = previousLikeCount
-    console.error('评论点赞失败:', error)
-    // 使用wot-ui的轻提示
     showErrorToast('评论点赞失败，请重试')
   }
 }
@@ -144,34 +153,20 @@ async function sendComment(content) {
     showErrorToast('请输入评论内容')
     return
   }
-
   if (!postsInfo.value) return
-
   const data = {
     content: content,
     postsId: postsId.value,
     parentId: 0 // 表示直接评论动态，不是回复别人的评论
   }
-
-  // 保存当前评论内容，用于失败时恢复
   const originalContent = content
 
   try {
-    // 发送评论
     await postsStore.PostComments(data)
-
-    // 重新获取评论数据，更新评论列表
     postsInfo.value = await postsStore.getPostsInfo({ postsId: postsId.value })
-
-    // 更新评论计数
-    if (postsInfo.value.commentCount !== undefined) {
-      postsInfo.value.commentCount += 1
-    }
   } catch (error) {
     console.error('发送评论失败:', error)
-    // 恢复评论内容
     commentContent.value = originalContent
-    // 聚焦到输入框
     uni.$nextTick(() => {
       uni.createSelectorQuery().select('.custom-search >>> input').focus()
     })

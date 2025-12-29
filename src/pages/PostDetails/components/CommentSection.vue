@@ -53,12 +53,12 @@
                   <!-- 评论点赞按钮 -->
                   <view class="comment-like" @click="setCommentLike(comment)">
                     <wd-icon
-                      :name="comment.isLiked ? 'fill_good' : 'good'"
                       class-prefix="iconfont"
-                      :color="comment.isLiked ? '#ff6b6b' : '#0083ff'"
+                      :name="comment.isLikeController ? 'fill_good' : 'good'"
+                      :color="comment.isLikeController ? '#ff6b6b' : '#0083ff'"
                       size="16px"
                     />
-                    <text class="like-count">{{ comment.likeCount || 0 }}</text>
+                    <text class="like-count">{{ comment.likeCount ? comment.likeCount : 0 }}</text>
                   </view>
                 </view>
               </view>
@@ -72,14 +72,16 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { sortComments, formatCommentTime } from '../../../utils/comments'
+import { sortComments, formatCommentTime } from '@/utils/comments'
 
 // 定义组件接收的props
 const props = defineProps({
+  // 动态数据
   postsInfo: {
     type: Object,
     required: true
   },
+  // 评论列表
   commentList: {
     type: Array,
     default: () => []
@@ -102,10 +104,7 @@ const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 
 // 根据当前选择的排序方式进行评论排序
 const sortedCommentList = computed(() => {
-  // 获取原始评论列表
-  const comments = [...props.commentList] // 使用副本以避免修改原始数据
-
-  // 根据当前分段器值进行排序
+  const comments = [...props.commentList]
   return sortComments(comments, current.value)
 })
 

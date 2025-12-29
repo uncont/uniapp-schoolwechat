@@ -76,6 +76,7 @@
 import { ref, computed } from 'vue'
 import { usePostsStore } from '@/stores/PostsInfo'
 import { useToast } from 'wot-design-uni'
+import { debounceLike, calculateLikeCount } from '@/utils/like'
 
 // 获取toast实例
 const { error: showErrorToast } = useToast()
@@ -83,12 +84,16 @@ const { error: showErrorToast } = useToast()
 // 动态仓库
 const postsStore = usePostsStore()
 
+// 传输动态数据
 const props = defineProps({
   posts: {
     type: Object,
     required: true
   }
 })
+
+// 定义 emits
+const emit = defineEmits(['updateLikeStatus'])
 
 const joy = ref('https://wot-ui.cn/assets/redpanda.jpg')
 
@@ -99,19 +104,9 @@ isLiked.value = props.posts.isLike
 // 计算点赞图标名称
 const likeIconName = computed(() => (isLiked.value ? 'fill_good' : 'good'))
 
-// 计算点赞显示数量
+// 计算点赞显示数量 -
 const likeCountDisplay = computed(() => {
-  if (!props.posts) return 0
-  let count = props.posts.likeCount
-  // 否则保持原始likeCount
-  if (isLiked.value && !props.posts.isLiked) {
-    // 从没点赞变为点赞，数量加1
-    count = props.posts.likeCount + 1
-  } else if (!isLiked.value && props.posts.isLiked) {
-    // 从点赞变为没点赞，数量减1
-    count = props.posts.likeCount - 1
-  }
-  return count
+  return calculateLikeCount(props.posts, isLiked.value)
 })
 
 // 跳转到帖子详情页
@@ -121,43 +116,38 @@ function PushDetail() {
   })
 }
 
-// 添加节流功能的点赞函数 - 只在最终状态与初始状态不同时才发送请求
-let throttleTimer = null
-let initialStatus = props.posts.isLike // 记录初始状态
-const THROTTLE_DELAY = 500 // 500ms节流延迟
-
+// 添加节流功能的点赞函数
 async function setPostsLike() {
-  // 立即切换图标和本地状态（乐观更新）
+  // 保存初始状态
+  const initialStatus = props.posts.isLike
   isLiked.value = !isLiked.value
-
-  // 清除之前的定时器
-  if (throttleTimer) {
-    clearTimeout(throttleTimer)
-  }
-
-  // 设置新的定时器，延迟执行请求
-  throttleTimer = setTimeout(async () => {
-    if (!props.posts) return
-
-    // 只有当最终状态与初始状态不同时才发送请求
-    if (isLiked.value !== initialStatus) {
-      const data = {
-        postsId: props.posts.postsId
-      }
-      try {
-        await postsStore.PostsLike(data)
-        // 更新初始状态为当前状态
-        initialStatus = isLiked.value
-      } catch (error) {
-        // 请求失败时回滚状态
+  try {
+    await debounceLike(
+      postsStore.PostsLike, // API调用函数
+      { postsId: props.posts.postsId }, // API参数
+      initialStatus, // 初始状态
+      () => isLiked.value, // 更新本地状态的函数
+      error => {
         isLiked.value = initialStatus
         showErrorToast('点赞失败，请重试')
+      },
+      500, // 防抖延迟时间
+      `posts_like_${props.posts.postsId}`,
+      // 成功回调：通过 emit 通知父组件更新数据
+      () => {
+        emit('updateLikeStatus', {
+          postsId: props.posts.postsId,
+          isLike: isLiked.value,
+          likeCount: isLiked.value 
+            ? (props.posts.likeCount || 0) + 1 
+            : Math.max(0, (props.posts.likeCount || 0) - 1)
+        })
       }
-    }
-
-    // 执行完后清除定时器
-    throttleTimer = null
-  }, THROTTLE_DELAY)
+    )
+  } catch (error) {
+    // 错误已在工具函数中处理
+    console.error('点赞请求失败:', error)
+  }
 }
 
 defineOptions({
